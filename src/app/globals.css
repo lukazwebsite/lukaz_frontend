@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  --font-sans: var(--font-dm-sans); /* ✅ Added here */
+}
+
+.space-grotesk {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+
+
+
+
+
+
+
+/* Custom Ripple Animations */
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes ping-slower {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* Tiptap Global Styles for Next.js */
+.tiptap-content table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    margin: 0;
+    overflow-wrap: break-word;
+}
+
+.tiptap-content td,
+.tiptap-content th {
+    min-width: 1em;
+    border: 1px solid #ced4da;
+    padding: 3px 5px;
+    vertical-align: top;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.tiptap-content th {
+    font-weight: bold;
+    text-align: left;
+    background-color: #f1f3f5;
+}
+
+.tiptap-content p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.tiptap-content p:empty::before {
+    content: "";
+    display: inline-block;
+}
+
+.tiptap-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Image Responsive Fix */
+.tiptap-content img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 4px;
+}
+
+.tiptap-content img[data-align="left"] {
+    float: left;
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.tiptap-content img[data-align="right"] {
+    float: right;
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.tiptap-content img[data-align="center"] {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Video Responsive Fix */
+.tiptap-content div[data-youtube-video] {
+    display: inline-block;
+    max-width: 100% !important;
+}
+
+.tiptap-content iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    border-radius: 4px;
+}
+
+.tiptap-content ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tiptap-content ol {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tiptap-content li > p {
+    margin: 0;
+}
+
+
