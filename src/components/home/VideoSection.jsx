@@ -19,8 +19,7 @@ const VideoSection = async ({video}) => {
         <div className="relative w-full aspect-video">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-             src={`https://www.youtube.com/embed/${video?.video_link}?autoplay=1&mute=1&controls=0&showinfo=0&loop=1&playlist=${video?.video_link}`}
-            // src={`https://www.youtube.com/embed/${videos[0].video_link}?autoplay=1&mute=1&rel=0&modestbranding=1&controls=1`}
+             src={`https://www.youtube.com/embed/${video?.video_link}?autoplay=1&mute=1&controls=0&showinfo=0&loop=1&rel=0&modestbranding=1&playlist=${video?.video_link}`}
             title={video?.title}
             allow="autoplay; encrypted-media; clipboard-write; accelerometer; gyroscope; picture-in-picture"
             allowFullScreen

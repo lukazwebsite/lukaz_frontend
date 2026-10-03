@@ -93,8 +93,32 @@ export async function getBrands() {
 
 
 
-export async function getShopByGender() {
-  const API_URL = `${baseUrl}/api/shop-by`;
+// Deprecated: the "Shop by Category" homepage grid now reads featured
+// categories from /api/categories/featured. Kept for reference only.
+// export async function getShopByGender() {
+//   const API_URL = `${baseUrl}/api/shop-by`;
+//
+//   try {
+//     const res = await fetch(API_URL, {
+//       next: { revalidate: 30 },
+//       signal: AbortSignal.timeout(8000),
+//     });
+//
+//     if (!res.ok) {
+//       throw new Error(`Failed to fetch brands: ${res.statusText}`);
+//     }
+//
+//     const json = await res.json();
+//
+//     return json || [];
+//   } catch (error) {
+//     console.error("Error fetching brands:", error);
+//     return [];
+//   }
+// }
+
+export async function getFeaturedCategories() {
+  const API_URL = `${baseUrl}/api/categories/featured`;
 
   try {
     const res = await fetch(API_URL, {
@@ -103,15 +127,15 @@ export async function getShopByGender() {
     });
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch brands: ${res.statusText}`);
+      throw new Error(`Failed to fetch featured categories: ${res.statusText}`);
     }
-    
+
     const json = await res.json();
 
-    return json || [];
+    return json?.data || [];
   } catch (error) {
-    console.error("Error fetching brands:", error);
-    return []; 
+    console.error("Error fetching featured categories:", error);
+    return [];
   }
 }
 
@@ -186,27 +210,29 @@ export async function getCategories() {
 
 
 
-export async function getShopByCategories() {
-  const API_URL = `${baseUrl}/api/shop-by`;
-
-  try {
-    const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
-      signal: AbortSignal.timeout(8000),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Failed to fetch brands: ${res.statusText}`);
-    }
-    
-    const json = await res.json();
-
-    return json || [];
-  } catch (error) {
-    console.error("Error fetching brands:", error);
-    return []; 
-  }
-}
+// Deprecated: duplicate of getShopByGender against the retired /api/shop-by
+// endpoint. Use getFeaturedCategories instead.
+// export async function getShopByCategories() {
+//   const API_URL = `${baseUrl}/api/shop-by`;
+//
+//   try {
+//     const res = await fetch(API_URL, {
+//       next: { revalidate: 30 },
+//       signal: AbortSignal.timeout(8000),
+//     });
+//
+//     if (!res.ok) {
+//       throw new Error(`Failed to fetch brands: ${res.statusText}`);
+//     }
+//
+//     const json = await res.json();
+//
+//     return json || [];
+//   } catch (error) {
+//     console.error("Error fetching brands:", error);
+//     return [];
+//   }
+// }
 
 
 
@@ -295,7 +321,30 @@ export async function getVideos() {
     return json || [];
   } catch (error) {
     console.error("Error fetching videos:", error);
-    return []; 
+    return [];
+  }
+}
+
+
+export async function getTeamMembers() {
+  const API_URL = `${baseUrl}/api/team-members`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: 30 },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch team members: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    // console.log("get team members res:", json);
+    return json || [];
+  } catch (error) {
+    console.error("Error fetching team members:", error);
+    return [];
   }
 }
 

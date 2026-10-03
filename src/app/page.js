@@ -7,7 +7,8 @@ import RatingSlider from "@/components/home/RatingSlider";
 import ShopByBrandsSlider from "@/components/home/ShopByBrandsSlider";
 import VideoSection from "@/components/home/VideoSection";
 import Container from "@/components/shared/Container";
-import { getBrands, getCategories, getProductByCategory, getProducts, getReviews, getShopByCategories,  getVideos } from "@/utils/actions";
+import { getBrands, getCategories, getMenus, getProductByCategory, getProducts, getReviews, getTeamMembers, getVideos } from "@/utils/actions";
+import TeamSlider from "@/components/home/TeamSlider";
 import FeatureItems from "@/components/home/FeatureItems";
 import WelcomeSection from "@/components/home/WelcomeSection";
 import AccessoriesSlider from "@/components/home/AccessoriesSlider";
@@ -24,8 +25,9 @@ export default async function Home() {
   const reviews = await getReviews()
   const categories = await getCategories()
   const featureItems = await getProductByCategory(91)
-   const videos = await getVideos();
-   const shopByCategories = await getShopByCategories()
+  const videos = await getVideos();
+  const teamMembers = await getTeamMembers();
+  const categoryTree = await getMenus();
 
   // const reviews=await getReviews();
 
@@ -44,7 +46,7 @@ export default async function Home() {
         <ProductSlider products={products?.data} />
       </Container>
 
-      <CategoriesGrid  />
+      <CategoriesGrid categoryTree={categoryTree} />
 
       <Container>
         {/* <ShopByBrandsSlider brands={brands} /> */}
@@ -64,6 +66,7 @@ export default async function Home() {
 
 
       <Container>
+        <TeamSlider members={teamMembers} />
         <OutletsSection/>
         <RatingSlider reviews={reviews?.data} />
       </Container>

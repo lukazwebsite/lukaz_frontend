@@ -569,7 +569,7 @@ export default function ProductDetails({ product }) {
                   ${isButtonDisable()
                                             ? "pointer-events-none opacity-50 cursor-not-allowed bg-gray-300 text-gray-600"
                                             : isPreOrderRequired()
-                                                ? "bg-gradient-to-r from-[#3A9E75] to-green-500 text-white hover:from-green-700 hover:to-green-600"
+                                                ? "bg-linear-to-r from-[#3A9E75] to-green-500 text-white hover:from-green-700 hover:to-green-600"
                                                 : "bg-[#3A9E75] text-white"
                                         }
   `}
@@ -582,10 +582,10 @@ export default function ProductDetails({ product }) {
                                     onClick={handleAddToCart}
                                     disabled={isButtonDisable()}
                                     className={`w-full cursor-pointer py-3 px-6 rounded-md font-semibold shadow-md hover:shadow-lg disabled:cursor-not-allowed transition-all duration-300 ${isPreOrderRequired()
-                                        ? "bg-gradient-to-r from-green-600 to-green-500 text-white hover:from-green-700 hover:to-green-600 disabled:from-gray-300 disabled:to-gray-300 disabled:text-gray-600"
+                                        ? "bg-linear-to-r from-green-600 to-green-500 text-white hover:from-green-700 hover:to-green-600 disabled:from-gray-300 disabled:to-gray-300 disabled:text-gray-600"
                                         : isButtonDisable()
-                                            ? "bg-gradient-to-r from-green-600 to-green-500 text-white hover:from-green-700 hover:to-green-600 disabled:from-gray-300 disabled:to-gray-300 disabled:text-gray-600"
-                                            : "bg-gradient-to-r from-green-600 to-[#3A9E75] text-white hover:from-green-800 hover:to-[#3A9E75] disabled:from-gray-300 disabled:to-gray-300 disabled:text-gray-600"
+                                            ? "bg-linear-to-r from-green-600 to-green-500 text-white hover:from-green-700 hover:to-green-600 disabled:from-gray-300 disabled:to-gray-300 disabled:text-gray-600"
+                                            : "bg-linear-to-r from-green-600 to-[#3A9E75] text-white hover:from-green-800 hover:to-[#3A9E75] disabled:from-gray-300 disabled:to-gray-300 disabled:text-gray-600"
                                         }`}
                                 >
                                     {isPreOrderRequired() ? "Pre-Order" : "Add to Cart"}

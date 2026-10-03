@@ -1,7 +1,7 @@
 
 import React from 'react';
 import GenderCategoryCard from '../shared/GenderCategoryCard';
-import { getShopByGender } from '@/utils/actions';
+// import { getShopByGender } from '@/utils/actions';
 
 
 const cardData = [
@@ -30,7 +30,9 @@ const cardData = [
 
 export default async function GenderCategoryList() {
 
-const shopbyGender=await getShopByGender()
+// Retired: /api/shop-by is no longer used. This component is not rendered.
+// const shopbyGender=await getShopByGender()
+const shopbyGender=[]
 // console.log("shop by", shopbyGender)
 
   return (
