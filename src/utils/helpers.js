@@ -1,9 +1,30 @@
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://admin.lukazshop.com";
 
-export function getImageUrl(type,path) {
-  if (!path) return "/images/placeholder.png"; 
-  return `${baseUrl}/${type}/${path}`;
+// Images are served from the production host in local dev, where the backend's
+// public/products folder is empty. Falls back to the API origin when unset.
+const imageBaseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || baseUrl;
+
+// Where to retry when the primary host has no such file. In local dev the
+// primary is localhost and uploads made on production are missing, so this
+// points at production. Unset in production, where there is nowhere to fall
+// back to and the placeholder is the right answer.
+const imageFallbackUrl =
+  process.env.NEXT_PUBLIC_IMAGE_FALLBACK_URL || "";
+
+export const PLACEHOLDER_IMAGE = "/images/placeholder.png";
+
+export function getImageUrl(type, path) {
+  if (!path) return PLACEHOLDER_IMAGE;
+  return `${imageBaseUrl}/${type}/${path}`;
+}
+
+// Secondary URL for the same asset, or null when no fallback host is set or
+// it would just repeat the primary request.
+export function getFallbackImageUrl(type, path) {
+  if (!path || !imageFallbackUrl) return null;
+  if (imageFallbackUrl === imageBaseUrl) return null;
+  return `${imageFallbackUrl}/${type}/${path}`;
 }
 
 

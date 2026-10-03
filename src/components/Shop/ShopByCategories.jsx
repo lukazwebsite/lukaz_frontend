@@ -182,7 +182,7 @@ export default function ShopByCategories({ slug }) {
 
       {/* Infinity Scroll Target */}
       {currentPage < totalPages && (
-        <div ref={observerRef} className="flex justify-center mt-10 min-h-[40px] items-center">
+        <div ref={observerRef} className="flex justify-center mt-10 min-h-10 items-center">
           {loadingMore ? (
             <div className="flex gap-2 items-center text-gray-500">
               <span className="w-5 h-5 border-2 border-gray-300 border-t-[#3A9E75] rounded-full animate-spin"></span>
@@ -211,7 +211,7 @@ export default function ShopByCategories({ slug }) {
             key={cols}
             onClick={() => setGridCols(cols)}
             className={cn(
-              "flex gap-[2px] p-1 border rounded hover:border-black transition-all",
+              "flex gap-0.5 p-1 border rounded hover:border-black transition-all",
               gridCols === cols ? "border-black bg-gray-100" : "border-gray-300"
             )}
           >

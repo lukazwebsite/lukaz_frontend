@@ -54,6 +54,51 @@ body {
   }
 }
 
+/* Mega-menu reveal: tiles rise and fade in, staggered by index.
+   Opacity finishes ahead of the movement so tiles are already readable while
+   they are still settling — that reads smoother than fading and moving in
+   lockstep. */
+@keyframes megaRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(.985);
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes megaFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Outlet detail popup: scales up from slightly below as it fades in. */
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-modalIn {
+  animation: modalIn 0.25s ease-out;
+}
+
 /* Tiptap Global Styles for Next.js */
 .tiptap-content table {
     border-collapse: collapse;

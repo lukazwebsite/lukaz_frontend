@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { getShopByGender } from '@/utils/actions';
+// import { getShopByGender } from '@/utils/actions';
 import NestedCategoryGridCard from '../shared/NestedCategoryGridCard';
 
 
@@ -8,7 +8,9 @@ import NestedCategoryGridCard from '../shared/NestedCategoryGridCard';
 
 export default async function NestedCategoryGrid () {
 
-const shopbyGender=await getShopByGender()
+// Retired: /api/shop-by is no longer used. This component is not rendered.
+// const shopbyGender=await getShopByGender()
+const shopbyGender=[]
 // console.log("shop by", shopbyGender)
 
   return (
