@@ -25,6 +25,27 @@ export async function getMenus() {
   }
 }
 
+export async function getFeaturedMenus() {
+  const API_URL = `${baseUrl}/api/categories/featured/with/childs`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: 30 },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch featured menus: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    return json?.data || [];
+  } catch (error) {
+    console.error("Error fetching featured menus:", error);
+    return [];
+  }
+}
+
 export async function getProducts() {
   const API_URL = `${baseUrl}/api/products`;
 
