@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { getImageUrl } from '@/utils/helpers'
 import { useRouter } from 'next/navigation'
 import { useFilter } from '@/context/FilterContext'
@@ -22,6 +22,8 @@ export default function CategoriesGrid({ categoryTree = [] }) {
   const router = useRouter()
   const { dispatch: dispatchFilterProduct } = useFilter()
 
+  const sectionRef = useRef(null)
+
   // Breadcrumb trail of drilled-in category objects.
   // Empty  → show top-level
   // [A]    → show A's children
@@ -30,6 +32,15 @@ export default function CategoriesGrid({ categoryTree = [] }) {
 
   const current = trail[trail.length - 1]
   const items = current ? current.childs ?? [] : categoryTree
+
+  // Scroll the section to the top of the viewport whenever the trail changes
+  // (drill-in or back). This keeps the heading visible instead of the page
+  // jumping to wherever the shrunken grid ends up.
+  useEffect(() => {
+    if (trail.length > 0 && sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [trail])
 
   const handleSelect = (item) => {
     if (item?.childs?.length > 0) {
@@ -46,7 +57,7 @@ export default function CategoriesGrid({ categoryTree = [] }) {
   const goToLevel = (index) => setTrail(prev => prev.slice(0, index + 1))
 
   return (
-    <section className="py-16 bg-linear-to-r from-[#8ae5bf] via-[#68bf9b] to-[#70bf9c]">
+    <section ref={sectionRef} className="py-16 bg-linear-to-r from-[#8ae5bf] via-[#68bf9b] to-[#70bf9c]">
       {/* ── Heading ── */}
       <div className="text-center mb-6">
         <h2 className="text-2xl md:text-3xl font-semibold text-white space-grotesk">

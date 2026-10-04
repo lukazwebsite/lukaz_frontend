@@ -7,7 +7,7 @@ import RatingSlider from "@/components/home/RatingSlider";
 import ShopByBrandsSlider from "@/components/home/ShopByBrandsSlider";
 import VideoSection from "@/components/home/VideoSection";
 import Container from "@/components/shared/Container";
-import { getBrands, getCategories, getMenus, getProductByCategory, getProducts, getReviews, getTeamMembers, getVideos } from "@/utils/actions";
+import { getBrands, getCategories, getFeaturedMenus, getMenus, getProductByCategory, getProducts, getReviews, getTeamMembers, getVideos } from "@/utils/actions";
 import TeamSlider from "@/components/home/TeamSlider";
 import FeatureItems from "@/components/home/FeatureItems";
 import WelcomeSection from "@/components/home/WelcomeSection";
@@ -27,7 +27,7 @@ export default async function Home() {
   const featureItems = await getProductByCategory(91)
   const videos = await getVideos();
   const teamMembers = await getTeamMembers();
-  const categoryTree = await getMenus();
+  const categoryTree = await getFeaturedMenus();
 
   // const reviews=await getReviews();
 
