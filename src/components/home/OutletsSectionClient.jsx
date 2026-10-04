@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { getImageUrl } from "@/utils/helpers";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -28,12 +29,19 @@ function hasDetails(outlet) {
 
 // ──── Location Details Popup ────
 function LocationPopup({ isOpen, onClose, outlet }) {
-  if (!isOpen || !outlet) return null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  if (!isOpen || !outlet || !mounted) return null;
 
   const phone = outlet.manager_phone || outlet.contact;
   const href = mapHref(outlet);
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
       onClick={onClose}
@@ -130,7 +138,8 @@ function LocationPopup({ isOpen, onClose, outlet }) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
