@@ -1,9 +1,6 @@
 "use client"
 
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation } from "swiper/modules"
-import "swiper/css"
-import "swiper/css/navigation"
+import { useRef, useEffect, useCallback } from "react"
 
 const WhatsAppIcon = () => (
   <svg className="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -25,7 +22,6 @@ const ChevronRight = () => (
 
 const TeamCard = ({ member }) => (
   <div className="bg-white rounded-lg border border-gray-200 overflow-hidden flex flex-col h-full">
-    {/* Fixed ratio + object-cover keeps every photo the same box whatever its source size */}
     <div className="relative w-full aspect-[1/1] bg-gray-100">
       {member?.image_url ? (
         <img
@@ -33,6 +29,7 @@ const TeamCard = ({ member }) => (
           alt={member?.name}
           className="absolute inset-0 w-full h-full object-cover object-top"
           loading="lazy"
+          draggable={false}
         />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
@@ -49,7 +46,6 @@ const TeamCard = ({ member }) => (
         {member?.designation}
       </p>
 
-      {/* mt-auto pins the button to the card bottom, so uneven text never shifts it */}
       {member?.whatsapp && (
         <a
           href={`https://wa.me/${member.whatsapp}`}
@@ -67,27 +63,88 @@ const TeamCard = ({ member }) => (
   </div>
 )
 
+// Auto-scroll speed in px/s. Raise to go faster.
+const SPEED = 60
+// How many px to jump per arrow click
+const JUMP = 220
+
 export default function TeamSlider({ members }) {
-  // An empty list leaves no orphan heading behind when the API is down.
+  const trackRef = useRef(null)
+  const rafRef = useRef(null)
+  const posRef = useRef(0)
+  const pausedRef = useRef(false)
+  const lastTimeRef = useRef(null)
+  // target for smooth button-click animation
+  const targetRef = useRef(null)
+
+  // doubled list so seam is never visible
+  const doubled = members?.length ? [...members, ...members] : []
+
+  const animate = useCallback((timestamp) => {
+    const track = trackRef.current
+    if (!track) return
+
+    if (lastTimeRef.current == null) lastTimeRef.current = timestamp
+    const delta = timestamp - lastTimeRef.current
+    lastTimeRef.current = timestamp
+
+    const half = track.scrollWidth / 2
+
+    if (targetRef.current !== null) {
+      // Smooth ease toward button-click target
+      const diff = targetRef.current - posRef.current
+      const step = diff * 0.12
+      if (Math.abs(diff) < 0.5) {
+        posRef.current = targetRef.current
+        targetRef.current = null
+      } else {
+        posRef.current += step
+      }
+    } else if (!pausedRef.current) {
+      // Normal continuous scroll
+      posRef.current += (SPEED * delta) / 1000
+    }
+
+    // Wrap to keep within the first copy's length (infinite loop)
+    if (posRef.current >= half) posRef.current -= half
+    if (posRef.current < 0) posRef.current += half
+
+    track.style.transform = `translateX(-${posRef.current}px)`
+
+    rafRef.current = requestAnimationFrame(animate)
+  }, [])
+
+  useEffect(() => {
+    rafRef.current = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [animate, members])
+
+  const handlePrev = () => {
+    const track = trackRef.current
+    if (!track) return
+    const half = track.scrollWidth / 2
+    let next = posRef.current - JUMP
+    if (next < 0) next += half
+    targetRef.current = next
+    lastTimeRef.current = null
+  }
+
+  const handleNext = () => {
+    const track = trackRef.current
+    if (!track) return
+    const half = track.scrollWidth / 2
+    let next = posRef.current + JUMP
+    if (next >= half) next -= half
+    targetRef.current = next
+    lastTimeRef.current = null
+  }
+
   if (!members?.length) return null
 
   return (
-    <div className="team-slider pt-6 md:pt-8 pb-8">
-      {/* Swiper sets the slide height per-slide; stretching the wrapper equalises them */}
-      <style jsx global>{`
-        .team-slider .swiper-wrapper {
-          align-items: stretch;
-        }
-        .team-slider .swiper-slide {
-          height: auto;
-          display: flex;
-        }
-        .team-slider .swiper-slide > * {
-          width: 100%;
-        }
-      `}</style>
+    <div className="pt-6 md:pt-8 pb-8">
+      {/* Heading row with arrows */}
       <div className="flex items-center justify-between mb-5 gap-4">
-        {/* Spacer balances the arrow group so the heading stays optically centred */}
         <div className="hidden sm:block w-[88px] shrink-0" />
 
         <div className="flex-1 text-center">
@@ -95,51 +152,45 @@ export default function TeamSlider({ members }) {
           <p className="text-gray-500 text-sm mt-1">The People Behind LUKAZ</p>
         </div>
 
-        <div className="hidden sm:flex gap-2 w-[88px] shrink-0 justify-end">
+        <div className="flex gap-2 w-[88px] shrink-0 justify-end">
           <button
+            onClick={handlePrev}
             aria-label="Previous team members"
-            className="team-prev w-10 h-10 rounded-full border border-gray-300 bg-white text-gray-600 hover:text-green-600 hover:border-green-600 cursor-pointer flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-10 h-10 rounded-full border border-gray-300 bg-white text-gray-600 hover:text-green-600 hover:border-green-600 cursor-pointer flex items-center justify-center transition-colors"
           >
             <ChevronLeft />
           </button>
           <button
+            onClick={handleNext}
             aria-label="Next team members"
-            className="team-next w-10 h-10 rounded-full border border-gray-300 bg-white text-gray-600 hover:text-green-600 hover:border-green-600 cursor-pointer flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-10 h-10 rounded-full border border-gray-300 bg-white text-gray-600 hover:text-green-600 hover:border-green-600 cursor-pointer flex items-center justify-center transition-colors"
           >
             <ChevronRight />
           </button>
         </div>
       </div>
 
-      <Swiper
-        modules={[Navigation]}
-        spaceBetween={12}
-        slidesPerView={2.2}
-        // items-stretch makes every slide full height, so h-full cards match
-        className="!items-stretch"
-        navigation={{
-          nextEl: ".team-next",
-          prevEl: ".team-prev",
-        }}
-        breakpoints={{
-          640: { slidesPerView: 3.2 },
-          768: { slidesPerView: 3.2 },
-          1024: { slidesPerView: 4.2 },
-          1424: { slidesPerView: 5.2 },
-        }}
-        onInit={(swiper) => {
-          swiper.params.navigation.prevEl = ".team-prev"
-          swiper.params.navigation.nextEl = ".team-next"
-          swiper.navigation.init()
-          swiper.navigation.update()
-        }}
+      {/* Scrolling band */}
+      <div
+        className="overflow-hidden"
+        onMouseEnter={() => { pausedRef.current = true }}
+        onMouseLeave={() => { pausedRef.current = false; lastTimeRef.current = null }}
       >
-        {members?.map((member) => (
-          <SwiperSlide key={member?.id} className="!h-auto">
-            <TeamCard member={member} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+        <div
+          ref={trackRef}
+          className="flex gap-3 will-change-transform"
+          style={{ width: "max-content" }}
+        >
+          {doubled.map((member, i) => (
+            <div
+              key={`${member?.id}-${i}`}
+              className="w-[160px] sm:w-[180px] md:w-[200px] flex-shrink-0"
+            >
+              <TeamCard member={member} />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
