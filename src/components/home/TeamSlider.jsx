@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect, useCallback } from "react"
+import { useRef, useEffect, useCallback, useState } from "react"
 
 const WhatsAppIcon = () => (
   <svg className="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -20,7 +20,7 @@ const ChevronRight = () => (
   </svg>
 )
 
-const TeamCard = ({ member }) => (
+const TeamCard = ({ member, onImageLoad }) => (
   <div className="bg-white rounded-lg border border-gray-200 overflow-hidden flex flex-col h-full">
     <div className="relative w-full aspect-[1/1] bg-gray-100">
       {member?.image_url ? (
@@ -28,8 +28,9 @@ const TeamCard = ({ member }) => (
           src={member.image_url}
           alt={member?.name}
           className="absolute inset-0 w-full h-full object-cover object-top"
-          loading="lazy"
           draggable={false}
+          onLoad={onImageLoad}
+          onError={onImageLoad}
         />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
@@ -63,51 +64,81 @@ const TeamCard = ({ member }) => (
   </div>
 )
 
-// Auto-scroll speed in px/s. Raise to go faster.
-const SPEED = 60
-// How many px to jump per arrow click
-const JUMP = 220
+// px/s — slower and smoother
+const SPEED = 35
+// px per arrow click
+const JUMP = 210
 
 export default function TeamSlider({ members }) {
-  const trackRef = useRef(null)
-  const rafRef = useRef(null)
-  const posRef = useRef(0)
+  const trackRef  = useRef(null)
+  const rafRef    = useRef(null)
+  const posRef    = useRef(0)
   const pausedRef = useRef(false)
-  const lastTimeRef = useRef(null)
-  // accumulated manual offset from button clicks (eases to 0)
-  const nudgeRef = useRef(0)
+  const lastTsRef = useRef(null)
+  const nudgeRef  = useRef(0)
+  // The locked half-width. -1 means "not measured yet".
+  const halfRef   = useRef(-1)
 
-  // doubled list so seam is never visible
+  // doubled list for seamless loop
   const doubled = members?.length ? [...members, ...members] : []
 
-  const animate = useCallback((timestamp) => {
+  // How many images are in the first copy
+  const imageCount = members?.filter(m => m?.image_url).length ?? 0
+  const loadedRef  = useRef(0)
+
+  // Lock the half measurement once all images have loaded (or errored)
+  const handleImageLoad = useCallback(() => {
+    loadedRef.current += 1
+    if (loadedRef.current >= imageCount) {
+      const track = trackRef.current
+      if (track) {
+        // scrollWidth includes both copies; half is exactly one copy
+        halfRef.current = track.scrollWidth / 2
+      }
+    }
+  }, [imageCount])
+
+  // Also measure on mount for the case where there are no images
+  useEffect(() => {
+    if (imageCount === 0 && trackRef.current) {
+      halfRef.current = trackRef.current.scrollWidth / 2
+    }
+  }, [imageCount, members])
+
+  const animate = useCallback((ts) => {
     const track = trackRef.current
-    if (!track) return
+    if (!track) { rafRef.current = requestAnimationFrame(animate); return }
 
-    // Cap delta to 100 ms so a tab-switch or long frame never causes a jump
-    const delta = lastTimeRef.current == null ? 0 : Math.min(timestamp - lastTimeRef.current, 100)
-    lastTimeRef.current = timestamp
-
-    const half = track.scrollWidth / 2
-    if (half <= 0) {
+    // If half isn't locked yet, keep polling but don't move
+    if (halfRef.current <= 0) {
+      // Try to measure now — images might still be loading
+      const sw = track.scrollWidth / 2
+      if (sw > 0) halfRef.current = sw
+      lastTsRef.current = ts
       rafRef.current = requestAnimationFrame(animate)
       return
     }
 
-    // Ease out any pending nudge
+    const half = halfRef.current
+
+    // Cap delta — never more than 80 ms (handles tab-switch freezes)
+    const delta = lastTsRef.current == null ? 0 : Math.min(ts - lastTsRef.current, 80)
+    lastTsRef.current = ts
+
+    // Apply smooth nudge from button clicks (exponential ease-out)
     if (nudgeRef.current !== 0) {
-      const step = nudgeRef.current * 0.14
+      const step = nudgeRef.current * 0.10
       posRef.current += step
       nudgeRef.current -= step
-      if (Math.abs(nudgeRef.current) < 0.3) nudgeRef.current = 0
+      if (Math.abs(nudgeRef.current) < 0.2) nudgeRef.current = 0
     }
 
-    // Continuous auto-scroll (always runs, pauses on hover)
+    // Auto-scroll
     if (!pausedRef.current) {
       posRef.current += (SPEED * delta) / 1000
     }
 
-    // Seamless wrap — modulo keeps pos inside [0, half)
+    // Seamless wrap using the locked half value — never changes mid-flight
     posRef.current = ((posRef.current % half) + half) % half
 
     track.style.transform = `translateX(-${posRef.current}px)`
@@ -120,13 +151,8 @@ export default function TeamSlider({ members }) {
     return () => cancelAnimationFrame(rafRef.current)
   }, [animate, members])
 
-  const handlePrev = () => {
-    nudgeRef.current -= JUMP
-  }
-
-  const handleNext = () => {
-    nudgeRef.current += JUMP
-  }
+  const handlePrev = () => { nudgeRef.current -= JUMP }
+  const handleNext = () => { nudgeRef.current += JUMP }
 
   if (!members?.length) return null
 
@@ -163,7 +189,7 @@ export default function TeamSlider({ members }) {
       <div
         className="overflow-hidden"
         onMouseEnter={() => { pausedRef.current = true }}
-        onMouseLeave={() => { pausedRef.current = false; lastTimeRef.current = null }}
+        onMouseLeave={() => { pausedRef.current = false; lastTsRef.current = null }}
       >
         <div
           ref={trackRef}
@@ -175,7 +201,11 @@ export default function TeamSlider({ members }) {
               key={`${member?.id}-${i}`}
               className="w-[160px] sm:w-[180px] md:w-[200px] flex-shrink-0"
             >
-              <TeamCard member={member} />
+              {/* Only wire up onImageLoad for the first copy to avoid double-counting */}
+              <TeamCard
+                member={member}
+                onImageLoad={i < members.length ? handleImageLoad : undefined}
+              />
             </div>
           ))}
         </div>
