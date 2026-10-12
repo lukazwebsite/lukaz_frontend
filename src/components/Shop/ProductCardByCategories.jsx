@@ -71,7 +71,7 @@ export default function ProductCardByCategories({ product, productFullData }) {
   return (
     <div className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-gray-100 cursor-pointer">
       {/* Image */}
-      <div className="relative w-full aspect-[4/5]">
+      <div className="relative w-full aspect-[4/5] overflow-hidden">
         <Link href={`/product/${productFullData?.slug}`}>
           {/* Main image */}
           <Image
@@ -79,22 +79,20 @@ export default function ProductCardByCategories({ product, productFullData }) {
             alt={product?.name || "Product image"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-            className={`object-cover rounded-t-sm transition-opacity duration-300 ${
-              showHoverImage ? "group-hover:opacity-0" : ""
-            }`}
+            className="object-cover rounded-t-sm"
             onError={() =>
               setStep((prev) => (prev < chain.length - 1 ? prev + 1 : prev))
             }
           />
 
-          {/* Hover image — fades in on hover */}
+          {/* Hover image — slides up from bottom */}
           {showHoverImage && (
             <Image
               src={getImageUrl("products", hoverPath)}
               alt={product?.name || "Product image"}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-              className="object-cover rounded-t-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              className="object-cover rounded-t-sm translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"
               onError={() => setHoverFailed(true)}
             />
           )}

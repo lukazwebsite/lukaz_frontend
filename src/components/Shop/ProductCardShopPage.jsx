@@ -3,11 +3,31 @@ import { getImageUrl } from "@/utils/helpers";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import toast from "react-hot-toast";
+
+// Parse first gallery image same way ProductCard does
+function firstGalleryImage(raw) {
+  if (!raw) return null;
+  try {
+    const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+    return Array.isArray(parsed) ? parsed[0] || null : null;
+  } catch {
+    return null;
+  }
+}
 
 export default function ProductCardShopPage({ product }) {
   const { state, dispatch } = useContext(WishListContext);
+
+  const hoverPath = firstGalleryImage(product?.color_galleries);
+  const [hoverFailed, setHoverFailed] = useState(false);
+
+  useEffect(() => {
+    setHoverFailed(false);
+  }, [hoverPath]);
+
+  const showHoverImage = Boolean(hoverPath) && !hoverFailed;
 
   const isInWishlist = (slug) => {
     const exists = state.items.find(
@@ -52,11 +72,10 @@ export default function ProductCardShopPage({ product }) {
 
   return (
     <div
-
-      className="bg-white rounded-sm  overflow-hidden transform transition-all duration-300 shadow-lg hover:shadow-xl
+      className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 shadow-lg hover:shadow-xl
       cursor-pointer"
     >
-      <div className="relative w-full h-80 ">
+      <div className="relative w-full h-80">
         <Link href={`/product/${product?.slug}`}>
           <Image
             src={getImageUrl("products", product?.color_thumbnails)}
@@ -65,6 +84,16 @@ export default function ProductCardShopPage({ product }) {
             style={{ objectFit: "cover" }}
             className="rounded-t-sm"
           />
+          {showHoverImage && (
+            <Image
+              src={getImageUrl("products", hoverPath)}
+              alt="product hover image"
+              fill
+              style={{ objectFit: "cover" }}
+              className="rounded-t-sm translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"
+              onError={() => setHoverFailed(true)}
+            />
+          )}
         </Link>
         {(product?.regular_price && product?.discount_type == 1) && (
 
