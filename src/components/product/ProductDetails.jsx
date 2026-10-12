@@ -49,6 +49,9 @@ export default function ProductDetails({ product }) {
     const [selectedItemFromAdditional, setSelectItemFromAdditional] = useState({})
     const [selectedColourGalleries, setSelectedColourGalleries] = useState([])
     const [totalStock, setTotalStock] = useState("")
+    const [zoomStyle, setZoomStyle] = useState({ transform: "scale(1)", transformOrigin: "center center" })
+    const [isZooming, setIsZooming] = useState(false)
+    const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
 
 
@@ -65,7 +68,7 @@ export default function ProductDetails({ product }) {
             galleriesArray = JSON?.parse(product?.color_galleries)
         }
         setSelectedColourGalleries([product?.color_thumbnails, ...galleriesArray])
-        // setSelectedColourGalleries(galleriesArray)
+        setCurrentImageIndex(0)
         // const calculate_total_stock = product?.additionals.reduce((total, item) => total + (item.stocks_sum_stock), 0)
         const calculate_total_stock = product?.additionals?.reduce(
             (total, item) => total + Math.max(0, item.stocks_sum_stock ?? 0),
@@ -119,6 +122,7 @@ export default function ProductDetails({ product }) {
         setSelectedColourSlug(item?.slug)
         setMainImage(item?.color_thumbnails)
         setSelectedItemImage(item?.color_icon_small)
+        setCurrentImageIndex(0)
         // setCustomSlug(`${product?.product_id}_${item?.color?.toLowerCase()}_${selectedSize?.toLowerCase()}`)
         setCustomSlug(
             `${product?.product_id}_${item?.color?.trim().toLowerCase()
@@ -266,6 +270,34 @@ export default function ProductDetails({ product }) {
     }
 
 
+    const handleImageMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect()
+        const x = ((e.clientX - rect.left) / rect.width) * 100
+        const y = ((e.clientY - rect.top) / rect.height) * 100
+        setZoomStyle({
+            transform: "scale(2.2)",
+            transformOrigin: `${x}% ${y}%`,
+        })
+        setIsZooming(true)
+    }
+
+    const handleImageMouseLeave = () => {
+        setZoomStyle({ transform: "scale(1)", transformOrigin: "center center" })
+        setIsZooming(false)
+    }
+
+    const handlePrevImage = () => {
+        const newIndex = (currentImageIndex - 1 + selectedColourGalleries.length) % selectedColourGalleries.length
+        setCurrentImageIndex(newIndex)
+        setMainImage(selectedColourGalleries[newIndex])
+    }
+
+    const handleNextImage = () => {
+        const newIndex = (currentImageIndex + 1) % selectedColourGalleries.length
+        setCurrentImageIndex(newIndex)
+        setMainImage(selectedColourGalleries[newIndex])
+    }
+
     // console.log("product details selectedItemFromAdditional ", selectedItemFromAdditional)
     // console.log("product details customSlug ", customSlug)
     if (loading) {
@@ -336,23 +368,55 @@ export default function ProductDetails({ product }) {
 
                 {/* Image Gallery */}
                 <div className="space-y-2">
-                    <Swiper
-                        modules={[Pagination, Thumbs]}
-                        thumbs={{ swiper: thumbsSwiper }}
-                        pagination={{ clickable: true }}
-                        className="aspect-square rounded-lg overflow-hidden"
+                    <div
+                        className="aspect-square rounded-lg overflow-hidden relative group"
+                        style={{ cursor: isZooming ? "crosshair" : "zoom-in" }}
+                        onMouseMove={handleImageMouseMove}
+                        onMouseLeave={handleImageMouseLeave}
                     >
+                        <img
+                            src={getImageUrl("products", mainImage)}
+                            alt={`${product?.product?.name} `}
+                            className="w-full h-full object-cover transition-transform duration-100 ease-out will-change-transform"
+                            style={zoomStyle}
+                        />
 
-                        <SwiperSlide >
-                            <img
-                                // src={"/placeholder.svg"}
-                                src={getImageUrl("products", mainImage)}
-                                alt={`${product?.product?.name} `}
-                                className="w-full h-full object-cover"
-                            />
-                        </SwiperSlide>
+                        {/* Prev Button */}
+                        {selectedColourGalleries?.length > 1 && (
+                            <>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
+                                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-700 rounded-full w-9 h-9 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                    aria-label="Previous image"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
 
-                    </Swiper>
+                                {/* Next Button */}
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-700 rounded-full w-9 h-9 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                    aria-label="Next image"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+
+                                {/* Dot indicators */}
+                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    {selectedColourGalleries.map((_, i) => (
+                                        <span
+                                            key={i}
+                                            className={`block rounded-full transition-all duration-200 ${i === currentImageIndex ? "w-4 h-1.5 bg-[#3A9E75]" : "w-1.5 h-1.5 bg-white/70"}`}
+                                        />
+                                    ))}
+                                </div>
+                            </>
+                        )}
+                    </div>
 
                     {/* Thumbnail Navigation */}
                     <div className=" ">
@@ -369,7 +433,7 @@ export default function ProductDetails({ product }) {
                             {selectedColourGalleries?.map((item, index) => (
                                 <SwiperSlide key={index} className="cursor-pointer ">
                                     <div
-                                        onClick={() => setMainImage(item)}
+                                        onClick={() => { setMainImage(item); setCurrentImageIndex(index); }}
                                         // onClick={() => handleColorSelect(item)}
                                         className={`aspect-square rounded-lg overflow-hidden w-18 h-18 sm:w-24 sm:h-24  hover:border-[#3A9E75]  ${mainImage === item
                                             ? "border-2 border-[#3A9E75] "
