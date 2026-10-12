@@ -166,7 +166,7 @@ export async function getOutlets() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: 5 },   // short TTL so primary image changes appear quickly
       signal: AbortSignal.timeout(8000),
     });
 
@@ -175,11 +175,31 @@ export async function getOutlets() {
     }
 
     const json = await res.json();
-    // console.log("get outlates res:", json);
     return json || { data: [] };
   } catch (error) {
     console.error("Error fetching outlates:", error);
     return { data: [] };
+  }
+}
+
+export async function getOutlet(id) {
+  const API_URL = `${baseUrl}/api/outlates/${id}`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: 30 },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch outlet: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    return json?.data || null;
+  } catch (error) {
+    console.error("Error fetching outlet:", error);
+    return null;
   }
 }
 

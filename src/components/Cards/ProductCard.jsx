@@ -60,9 +60,7 @@ export default function ProductCard({ item }) {
           alt={item?.product_name || "Product Image"}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-          className={`object-cover transition-opacity duration-300 ${
-            showHoverImage ? "group-hover:opacity-0" : ""
-          }`}
+          className="object-cover"
           priority={false}
           onError={() =>
             setStep((prev) => (prev < chain.length - 1 ? prev + 1 : prev))
@@ -75,7 +73,7 @@ export default function ProductCard({ item }) {
             alt={item?.product_name || "Product Image"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-            className="object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            className="object-cover translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"
             priority={false}
             onError={() => setHoverFailed(true)}
           />

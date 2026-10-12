@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Search, ChevronDown, X } from "lucide-react";
 import { useFilter } from "@/context/FilterContext";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://admin.lukazshop.com";
 
@@ -53,26 +52,28 @@ export default function SearchBarWithDropdown() {
     setCategory(cat?.name || "All");
     setIsOpen(false);
     dispatchFilterProduct({ type: "SET_CATEGORIES", payload: cat?.id || "" });
+    // Only navigate when a category is picked without a search query
+    if (!query.trim()) {
+      router.push("/shop");
+    }
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     dispatchFilterProduct({ type: "SET_SEARCH", payload: query });
-    router.push(`/shop`);
+    dispatchFilterProduct({ type: "SET_CATEGORIES", payload: categoryId });
+    router.push("/shop");
   };
 
-
-  // for when empty search box clear filter 
-   useEffect(() => {
-      if(query?.length==""){
-      dispatchFilterProduct({ type: "SET_SEARCH", payload: query });
-      }
+  // Clear search term when input is emptied
+  useEffect(() => {
+    if (query === "") {
+      dispatchFilterProduct({ type: "SET_SEARCH", payload: "" });
+    }
   }, [query]);
 
-
- 
-
-  // Auto navigate when user stops typing
+  // Auto-navigate after user stops typing (800ms debounce)
   useEffect(() => {
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
@@ -83,9 +84,13 @@ export default function SearchBarWithDropdown() {
         dispatchFilterProduct({ type: "SET_SEARCH", payload: query });
         dispatchFilterProduct({ type: "SET_CATEGORIES", payload: categoryId });
         router.push("/shop");
-      }, 500); // 500ms delay
+      }, 800);
     }
-  }, [query, categoryId]);
+
+    return () => {
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    };
+  }, [query]);
 
   // Clear search
   const clearSearch = () => {
@@ -182,13 +187,13 @@ export default function SearchBarWithDropdown() {
       </div>
 
       {/* Search Button */}
-      <Link
-        href={`/shop`}
+      <button
+        type="submit"
         className="bg-primary-green cursor-pointer text-gray-600 py-2 pr-3 
         rounded-sm hover:text-[#3A9E75] transition"
       >
         <Search className="w-5 h-5 " />
-      </Link>
+      </button>
     </form>
   );
 }

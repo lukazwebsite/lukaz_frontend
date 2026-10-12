@@ -74,8 +74,8 @@ export default function TeamSlider({ members }) {
   const posRef = useRef(0)
   const pausedRef = useRef(false)
   const lastTimeRef = useRef(null)
-  // target for smooth button-click animation
-  const targetRef = useRef(null)
+  // accumulated manual offset from button clicks (eases to 0)
+  const nudgeRef = useRef(0)
 
   // doubled list so seam is never visible
   const doubled = members?.length ? [...members, ...members] : []
@@ -84,30 +84,31 @@ export default function TeamSlider({ members }) {
     const track = trackRef.current
     if (!track) return
 
-    if (lastTimeRef.current == null) lastTimeRef.current = timestamp
-    const delta = timestamp - lastTimeRef.current
+    // Cap delta to 100 ms so a tab-switch or long frame never causes a jump
+    const delta = lastTimeRef.current == null ? 0 : Math.min(timestamp - lastTimeRef.current, 100)
     lastTimeRef.current = timestamp
 
     const half = track.scrollWidth / 2
+    if (half <= 0) {
+      rafRef.current = requestAnimationFrame(animate)
+      return
+    }
 
-    if (targetRef.current !== null) {
-      // Smooth ease toward button-click target
-      const diff = targetRef.current - posRef.current
-      const step = diff * 0.12
-      if (Math.abs(diff) < 0.5) {
-        posRef.current = targetRef.current
-        targetRef.current = null
-      } else {
-        posRef.current += step
-      }
-    } else if (!pausedRef.current) {
-      // Normal continuous scroll
+    // Ease out any pending nudge
+    if (nudgeRef.current !== 0) {
+      const step = nudgeRef.current * 0.14
+      posRef.current += step
+      nudgeRef.current -= step
+      if (Math.abs(nudgeRef.current) < 0.3) nudgeRef.current = 0
+    }
+
+    // Continuous auto-scroll (always runs, pauses on hover)
+    if (!pausedRef.current) {
       posRef.current += (SPEED * delta) / 1000
     }
 
-    // Wrap to keep within the first copy's length (infinite loop)
-    if (posRef.current >= half) posRef.current -= half
-    if (posRef.current < 0) posRef.current += half
+    // Seamless wrap — modulo keeps pos inside [0, half)
+    posRef.current = ((posRef.current % half) + half) % half
 
     track.style.transform = `translateX(-${posRef.current}px)`
 
@@ -120,23 +121,11 @@ export default function TeamSlider({ members }) {
   }, [animate, members])
 
   const handlePrev = () => {
-    const track = trackRef.current
-    if (!track) return
-    const half = track.scrollWidth / 2
-    let next = posRef.current - JUMP
-    if (next < 0) next += half
-    targetRef.current = next
-    lastTimeRef.current = null
+    nudgeRef.current -= JUMP
   }
 
   const handleNext = () => {
-    const track = trackRef.current
-    if (!track) return
-    const half = track.scrollWidth / 2
-    let next = posRef.current + JUMP
-    if (next >= half) next -= half
-    targetRef.current = next
-    lastTimeRef.current = null
+    nudgeRef.current += JUMP
   }
 
   if (!members?.length) return null
