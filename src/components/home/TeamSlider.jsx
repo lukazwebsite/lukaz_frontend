@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect, useCallback, useState } from "react"
+import { useRef, useEffect, useCallback } from "react"
 
 const WhatsAppIcon = () => (
   <svg className="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -20,7 +20,7 @@ const ChevronRight = () => (
   </svg>
 )
 
-const TeamCard = ({ member, onImageLoad }) => (
+const TeamCard = ({ member }) => (
   <div className="bg-white rounded-lg border border-gray-200 overflow-hidden flex flex-col h-full">
     <div className="relative w-full aspect-[1/1] bg-gray-100">
       {member?.image_url ? (
@@ -29,8 +29,6 @@ const TeamCard = ({ member, onImageLoad }) => (
           alt={member?.name}
           className="absolute inset-0 w-full h-full object-cover object-top"
           draggable={false}
-          onLoad={onImageLoad}
-          onError={onImageLoad}
         />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
@@ -64,54 +62,45 @@ const TeamCard = ({ member, onImageLoad }) => (
   </div>
 )
 
-// px/s — slower and smoother
+// px/s scroll speed
 const SPEED = 35
 // px per arrow click
-const JUMP = 210
+const JUMP  = 210
+
+// How many times to repeat the list so one copy is always wider than any screen.
+// Each card is ~212px (200 + 12 gap). A 4K screen is ~3840px.
+// 20 cards × 212 = 4240px — enough for any viewport.
+const MIN_CARDS_PER_COPY = 20
 
 export default function TeamSlider({ members }) {
   const trackRef  = useRef(null)
+  const wrapRef   = useRef(null)
   const rafRef    = useRef(null)
   const posRef    = useRef(0)
   const pausedRef = useRef(false)
   const lastTsRef = useRef(null)
   const nudgeRef  = useRef(0)
-  // The locked half-width. -1 means "not measured yet".
-  const halfRef   = useRef(-1)
+  // width of exactly ONE copy of the list, locked after first good measure
+  const halfRef   = useRef(0)
 
-  // doubled list for seamless loop
-  const doubled = members?.length ? [...members, ...members] : []
+  if (!members?.length) return null
 
-  // How many images are in the first copy
-  const imageCount = members?.filter(m => m?.image_url).length ?? 0
-  const loadedRef  = useRef(0)
-
-  // Lock the half measurement once all images have loaded (or errored)
-  const handleImageLoad = useCallback(() => {
-    loadedRef.current += 1
-    if (loadedRef.current >= imageCount) {
-      const track = trackRef.current
-      if (track) {
-        // scrollWidth includes both copies; half is exactly one copy
-        halfRef.current = track.scrollWidth / 2
-      }
-    }
-  }, [imageCount])
-
-  // Also measure on mount for the case where there are no images
-  useEffect(() => {
-    if (imageCount === 0 && trackRef.current) {
-      halfRef.current = trackRef.current.scrollWidth / 2
-    }
-  }, [imageCount, members])
+  // Repeat the member list enough times so that one "copy" fills any screen.
+  // Then we render TWO copies side by side for the seamless loop.
+  const repsNeeded = Math.ceil(MIN_CARDS_PER_COPY / members.length)
+  // one full copy = repsNeeded × members
+  const oneCopy    = Array.from({ length: repsNeeded }, () => members).flat()
+  // the track holds exactly 2 copies
+  const trackItems = [...oneCopy, ...oneCopy]
 
   const animate = useCallback((ts) => {
     const track = trackRef.current
-    if (!track) { rafRef.current = requestAnimationFrame(animate); return }
+    const wrap  = wrapRef.current
+    if (!track || !wrap) { rafRef.current = requestAnimationFrame(animate); return }
 
-    // If half isn't locked yet, keep polling but don't move
+    // Lock half once we have a stable scrollWidth.
+    // scrollWidth / 2 = one copy because track = 2 copies.
     if (halfRef.current <= 0) {
-      // Try to measure now — images might still be loading
       const sw = track.scrollWidth / 2
       if (sw > 0) halfRef.current = sw
       lastTsRef.current = ts
@@ -121,11 +110,11 @@ export default function TeamSlider({ members }) {
 
     const half = halfRef.current
 
-    // Cap delta — never more than 80 ms (handles tab-switch freezes)
+    // Cap delta to avoid jumps after tab-switch / heavy frame
     const delta = lastTsRef.current == null ? 0 : Math.min(ts - lastTsRef.current, 80)
     lastTsRef.current = ts
 
-    // Apply smooth nudge from button clicks (exponential ease-out)
+    // Ease out button-click nudge
     if (nudgeRef.current !== 0) {
       const step = nudgeRef.current * 0.10
       posRef.current += step
@@ -138,23 +127,26 @@ export default function TeamSlider({ members }) {
       posRef.current += (SPEED * delta) / 1000
     }
 
-    // Seamless wrap using the locked half value — never changes mid-flight
+    // Seamless wrap — always stays inside [0, half)
     posRef.current = ((posRef.current % half) + half) % half
 
     track.style.transform = `translateX(-${posRef.current}px)`
-
     rafRef.current = requestAnimationFrame(animate)
   }, [])
 
   useEffect(() => {
+    // Reset on new members
+    posRef.current  = 0
+    halfRef.current = 0
+    lastTsRef.current = null
+    nudgeRef.current  = 0
+    cancelAnimationFrame(rafRef.current)
     rafRef.current = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(rafRef.current)
   }, [animate, members])
 
   const handlePrev = () => { nudgeRef.current -= JUMP }
   const handleNext = () => { nudgeRef.current += JUMP }
-
-  if (!members?.length) return null
 
   return (
     <div className="pt-6 md:pt-8 pb-8">
@@ -187,6 +179,7 @@ export default function TeamSlider({ members }) {
 
       {/* Scrolling band */}
       <div
+        ref={wrapRef}
         className="overflow-hidden"
         onMouseEnter={() => { pausedRef.current = true }}
         onMouseLeave={() => { pausedRef.current = false; lastTsRef.current = null }}
@@ -196,16 +189,12 @@ export default function TeamSlider({ members }) {
           className="flex gap-3 will-change-transform"
           style={{ width: "max-content" }}
         >
-          {doubled.map((member, i) => (
+          {trackItems.map((member, i) => (
             <div
               key={`${member?.id}-${i}`}
               className="w-[160px] sm:w-[180px] md:w-[200px] flex-shrink-0"
             >
-              {/* Only wire up onImageLoad for the first copy to avoid double-counting */}
-              <TeamCard
-                member={member}
-                onImageLoad={i < members.length ? handleImageLoad : undefined}
-              />
+              <TeamCard member={member} />
             </div>
           ))}
         </div>
