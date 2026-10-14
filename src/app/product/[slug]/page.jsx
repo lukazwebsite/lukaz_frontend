@@ -1,21 +1,19 @@
 import ProductDetails from '@/components/product/ProductDetails'
 
-// Fetch product details from API
+// Fetch product details from API.
+// Cached for 10 minutes (the admin panel clears it on edit through
+// /api/revalidate). A failed request throws instead of returning empty data,
+// so a backend hiccup never gets cached as a blank product page; Next keeps
+// serving the last good copy instead.
 async function getProductBySlug(slug) {
-    try {
-        const res = await fetch(`${process.env.BASE_URL || "https://admin.lukazshop.com"}/api/products/${slug}`, {
-            cache: "no-store",
-        });
+    const res = await fetch(`${process.env.BASE_URL || "https://admin.lukazshop.com"}/api/products/${slug}`, {
+        next: { revalidate: 600 },
+    });
 
-        if (!res.ok) {
-            throw new Error("Failed to fetch product data");
-        }
-        const data = await res.json();
-        return data;
-    } catch (error) {
-        console.error("Error fetching product by slug:", error);
-        return { data: [] };
+    if (!res.ok) {
+        throw new Error(`Failed to fetch product ${slug}: ${res.status}`);
     }
+    return res.json();
 }
 
 //  metadata
@@ -47,6 +45,14 @@ export async function generateMetadata({ params }) {
     };
 }
 
+
+// No slugs are built ahead of time. Each page is rendered on its first visit
+// and then cached like the rest of the site (10 minutes, or until the admin
+// panel calls /api/revalidate). Without this export Next renders the route
+// again on every request, and every render is a billed function call.
+export async function generateStaticParams() {
+    return [];
+}
 
 // Page Component
 export default async function ProductPage({ params }) {

@@ -47,11 +47,13 @@ export default function ProductCardInternational({ product }) {
       <div className="relative w-full h-80 ">
         <Link
           href={`/international-product/${product?.slug}`}
+          prefetch={false}
         >
           <Image
             src={getImageUrl("products", product?.color_thumbnails)}
             alt="product image"
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
             style={{ objectFit: "cover" }}
             className="rounded-t-sm"
           />
@@ -96,6 +98,7 @@ export default function ProductCardInternational({ product }) {
         </div>
         <Link
           href={`/international-product/${product?.slug}`}
+          prefetch={false}
           className="text-md font-semibold text-gray-800 mb-2"
         >
           {product?.product_name}
@@ -103,6 +106,7 @@ export default function ProductCardInternational({ product }) {
 
         <Link
           href={`/international-product/${product?.slug}`}
+          prefetch={false}
           className="text-md font-semibold text-gray-800 mb-2"
         >
           <div className="flex gap-3 items-center mt-1">

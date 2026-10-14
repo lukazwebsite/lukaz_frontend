@@ -6,6 +6,11 @@ import Link from "next/link";
 import React, { useContext, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
+// Card width in the shop grids (1 → 2/3 → 4 → 5 columns). Without this Next
+// assumes 100vw and serves a 1920px image into a ~300px card.
+const SHOP_GRID_SIZES =
+  "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw";
+
 // Parse first gallery image same way ProductCard does
 function firstGalleryImage(raw) {
   if (!raw) return null;
@@ -27,7 +32,11 @@ export default function ProductCardShopPage({ product }) {
     setHoverFailed(false);
   }, [hoverPath]);
 
-  const showHoverImage = Boolean(hoverPath) && !hoverFailed;
+  // Mounted only after the first hover, so a card costs one billed image
+  // instead of two. Touch screens never hover and never load it.
+  const [hovered, setHovered] = useState(false);
+
+  const showHoverImage = hovered && Boolean(hoverPath) && !hoverFailed;
 
   const isInWishlist = (slug) => {
     const exists = state.items.find(
@@ -36,9 +45,6 @@ export default function ProductCardShopPage({ product }) {
     return exists;
 
   }
-
-
-  console.log("tes porudtc", product)
 
 
   const handleWishList = (product) => {
@@ -72,15 +78,17 @@ export default function ProductCardShopPage({ product }) {
 
   return (
     <div
+      onMouseEnter={() => setHovered(true)}
       className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 shadow-lg hover:shadow-xl
       cursor-pointer"
     >
       <div className="relative w-full h-80 overflow-hidden">
-        <Link href={`/product/${product?.slug}`}>
+        <Link href={`/product/${product?.slug}`} prefetch={false}>
           <Image
             src={getImageUrl("products", product?.color_thumbnails)}
             alt="product image"
             fill
+            sizes={SHOP_GRID_SIZES}
             style={{ objectFit: "cover" }}
             className="rounded-t-sm"
           />
@@ -89,6 +97,7 @@ export default function ProductCardShopPage({ product }) {
               src={getImageUrl("products", hoverPath)}
               alt="product hover image"
               fill
+              sizes={SHOP_GRID_SIZES}
               style={{ objectFit: "cover" }}
               className="rounded-t-sm translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"
               onError={() => setHoverFailed(true)}
@@ -139,6 +148,7 @@ export default function ProductCardShopPage({ product }) {
         </div>
         <Link
           href={`/product/${product?.slug}`}
+          prefetch={false}
           className="text-md font-semibold text-gray-800 mb-2"
         >
           {product?.product_name}
@@ -146,6 +156,7 @@ export default function ProductCardShopPage({ product }) {
 
         <Link
           href={`/product/${product?.slug}`}
+          prefetch={false}
           className="text-md font-semibold text-gray-800 mb-2"
         >
           <div className="flex gap-3 items-center mt-1">
@@ -163,3 +174,4 @@ export default function ProductCardShopPage({ product }) {
     </div>
   );
 }
+ 

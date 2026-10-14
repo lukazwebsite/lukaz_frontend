@@ -169,7 +169,7 @@ export default function Footer() {
 
           <div className="hidden md:flex w-full mt-8 bg-white   items-center">
             <Image
-              src="/images/payments/sll_all_s.png"
+              src="/images/payments/sll_all_s.webp"
               alt="Available Payment Methods"
               width={1640}
               height={250}
@@ -180,7 +180,7 @@ export default function Footer() {
           <div className="flex md:hidden w-full mt-8 bg-white   items-center">
 
             <Image
-              src="/images/payments/sll_all_m.png"
+              src="/images/payments/sll_all_m.webp"
               alt="Available Payment Methods"
               width={1640}
               height={250}

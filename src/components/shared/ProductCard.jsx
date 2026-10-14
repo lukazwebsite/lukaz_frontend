@@ -37,6 +37,7 @@ export default function ProductCard({ product }) {
            src={getImageUrl("products", product?.color_thumbnails)}
           alt={product?.product_name}
           fill // Use fill to cover the parent div
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
           style={{ objectFit: "cover" }} // Ensure image covers the area
           className="rounded-t-sm" // Apply rounded corners to the top of the image
         />

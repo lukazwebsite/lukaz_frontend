@@ -51,6 +51,17 @@ const nextConfig = {
   images: {
     remotePatterns,
     dangerouslyAllowSVG: true,
+
+    // Images are resized by the admin backend, not by Vercel's paid image
+    // optimizer. See src/utils/imageLoader.js.
+    loader: "custom",
+    loaderFile: "./src/utils/imageLoader.js",
+
+    // The widths next/image may ask for. They must match image_widths in the
+    // backend's config/storefront.php, which refuses any other width. 1920
+    // stays for the full width home banners.
+    deviceSizes: [640, 828, 1200, 1920],
+    imageSizes: [96, 256, 384],
   },
 
   // Proxy /api/* to the backend defined by BASE_URL.

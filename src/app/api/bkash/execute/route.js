@@ -39,9 +39,9 @@ export async function GET(req) {
     console.error("Bkash execute error:", error);
 
     return NextResponse.redirect(
-      `${frontendUrl}/order-failed?error=Faild},{
-      status: 303, 
-    }`
+      `${frontendUrl}/order-failed?error=Faild`,{
+      status: 303,
+    }
     );
   }
 }
