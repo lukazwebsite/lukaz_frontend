@@ -115,7 +115,7 @@ export default function ProductDetails({ product }) {
 
 
     const handleColorSelect = (item) => {
-        const galleriesArray = JSON.parse(item?.color_galleries)
+        const galleriesArray = item?.color_galleries ? JSON.parse(item.color_galleries) : []
         // setSelectedColourGalleries(galleriesArray)
         setSelectedColourGalleries([item?.color_thumbnails, ...galleriesArray])
         setSelectedColor(item?.color)
