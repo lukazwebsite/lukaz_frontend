@@ -1,6 +1,11 @@
 
 const baseUrl = process.env.BASE_URL || "https://admin.lukazshop.com";
 
+// Seconds a catalog response stays cached. Every page that uses these
+// helpers is rebuilt at most this often, and each rebuild is billed by
+// Vercel, so keep it long. The admin panel calls /api/revalidate after an
+// edit, which clears the cache at once instead of waiting for this timer.
+const REVALIDATE = 600;
 
 
 export async function getMenus() {
@@ -8,7 +13,7 @@ export async function getMenus() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -30,7 +35,7 @@ export async function getFeaturedMenus() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -51,7 +56,7 @@ export async function getProducts() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -95,7 +100,7 @@ export async function getBrands() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -143,7 +148,7 @@ export async function getFeaturedCategories() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -166,7 +171,7 @@ export async function getOutlets() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 5 },   // short TTL so primary image changes appear quickly
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -187,7 +192,7 @@ export async function getOutlet(id) {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -208,7 +213,7 @@ export async function getReviews() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -232,7 +237,7 @@ export async function getCategories() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -282,7 +287,7 @@ export async function getNotices() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -304,7 +309,7 @@ export async function getProductByCategory(id) {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -326,7 +331,7 @@ export async function getBanners() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -349,7 +354,7 @@ export async function getVideos() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 
@@ -372,7 +377,7 @@ export async function getTeamMembers() {
 
   try {
     const res = await fetch(API_URL, {
-      next: { revalidate: 30 },
+      next: { revalidate: REVALIDATE },
       signal: AbortSignal.timeout(8000),
     });
 

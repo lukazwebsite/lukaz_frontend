@@ -43,11 +43,12 @@ export const RelatedProductCard = ({ product }) => {
       className="bg-white rounded-sm  overflow-hidden transform transition-all duration-300 hover:shadow-lg  cursor-pointer"
     >
       <div className="relative w-full h-80 ">
-        <Link href={`/product/${product?.slug}`}>
+        <Link href={`/product/${product?.slug}`} prefetch={false}>
           <Image
             src={getImageUrl("products", product?.color_thumbnails)}
             alt="product image"
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
             style={{ objectFit: "cover" }}
             className="rounded-t-sm"
           />
@@ -97,6 +98,7 @@ export const RelatedProductCard = ({ product }) => {
         </div>
         <Link
           href={`/product/${product?.slug}`}
+          prefetch={false}
           className="text-md font-semibold text-gray-800 mb-2"
         >
           {product?.product_name}
@@ -104,6 +106,7 @@ export const RelatedProductCard = ({ product }) => {
 
         <Link
           href={`/product/${product?.slug}`}
+          prefetch={false}
           className="text-md font-semibold text-gray-800 mb-2"
         >
           <div className="flex gap-3 items-center mt-1">

@@ -46,11 +46,18 @@ export default function ProductCard({ item }) {
     setHoverFailed(false);
   }, [hoverPath]);
 
-  const showHoverImage = Boolean(hoverPath) && !hoverFailed;
+  // The hover image is only mounted after the first hover. Rendering it up
+  // front made every card download two images, and every image is a billed
+  // Vercel transformation. Touch screens never hover, so they never load it.
+  const [hovered, setHovered] = useState(false);
+
+  const showHoverImage = hovered && Boolean(hoverPath) && !hoverFailed;
 
   return (
     <Link
       href={`/product/${item?.slug}`}
+      prefetch={false}
+      onMouseEnter={() => setHovered(true)}
       className="group mx-auto cursor-pointer block rounded-md bg-white"
     >
       {/* Image Container */}
@@ -59,7 +66,7 @@ export default function ProductCard({ item }) {
           src={chain[step]}
           alt={item?.product_name || "Product Image"}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+          sizes="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 25vw"
           className="object-cover"
           priority={false}
           onError={() =>
@@ -72,7 +79,7 @@ export default function ProductCard({ item }) {
             src={getImageUrl("products", hoverPath)}
             alt={item?.product_name || "Product Image"}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+            sizes="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 25vw"
             className="object-cover translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"
             priority={false}
             onError={() => setHoverFailed(true)}

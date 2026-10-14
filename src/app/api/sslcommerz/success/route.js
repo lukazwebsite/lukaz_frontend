@@ -40,9 +40,9 @@ export async function POST(req) {
     console.error("SSLCommerz success error:", err);
     
     return NextResponse.redirect(
-      `${frontendUrl}/order-failed?error=${encodeURIComponent(err?.message)},{
-      status: 303, 
-    }`
+      `${frontendUrl}/order-failed?error=${encodeURIComponent(err?.message)}`,{
+      status: 303,
+    }
     );
   }
 }

@@ -176,6 +176,7 @@ export default function ShopByCategories({ slug }) {
             product={product?.product}
             productFullData={product}
             cardHeight={cardHeights[gridCols]}
+            gridCols={gridCols}
           />
         ))}
       </div>

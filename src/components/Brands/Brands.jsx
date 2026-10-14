@@ -49,6 +49,7 @@ export default function Brands({ brands }) {
                 src={getImageUrl("brand", brand?.thumbnail)}
                 alt={brand?.name}
                 fill
+                sizes="128px"
                 className="object-contain rounded-full p-2 "
               />
             </div>

@@ -18,7 +18,7 @@ function firstGalleryImage(raw) {
   }
 }
 
-export default function ProductCardByCategories({ product, productFullData }) {
+export default function ProductCardByCategories({ product, productFullData, gridCols = 5 }) {
   const { state, dispatch } = useContext(WishListContext);
 
   // ── Main image with fallback chain ────────────────────────────────────────
@@ -40,7 +40,14 @@ export default function ProductCardByCategories({ product, productFullData }) {
   const [hoverFailed, setHoverFailed] = useState(false);
   useEffect(() => { setHoverFailed(false); }, [hoverPath]);
 
-  const showHoverImage = Boolean(hoverPath) && !hoverFailed;
+  // Mounted only after the first hover, so a card costs one billed image
+  // instead of two. Touch screens never hover and never load it.
+  const [hovered, setHovered] = useState(false);
+
+  const showHoverImage = hovered && Boolean(hoverPath) && !hoverFailed;
+
+  // Below 1024px the grid is always 2 columns; above it the shopper picks.
+  const imageSizes = `(max-width: 1023px) 50vw, ${Math.ceil(100 / gridCols)}vw`;
 
   // ── Wishlist ──────────────────────────────────────────────────────────────
   const isInWishlist = (slug) =>
@@ -69,16 +76,19 @@ export default function ProductCardByCategories({ product, productFullData }) {
   };
 
   return (
-    <div className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-gray-100 cursor-pointer">
+    <div
+      onMouseEnter={() => setHovered(true)}
+      className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-gray-100 cursor-pointer"
+    >
       {/* Image */}
       <div className="relative w-full aspect-[4/5] overflow-hidden">
-        <Link href={`/product/${productFullData?.slug}`}>
+        <Link href={`/product/${productFullData?.slug}`} prefetch={false}>
           {/* Main image */}
           <Image
             src={chain[step]}
             alt={product?.name || "Product image"}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+            sizes={imageSizes}
             className="object-cover rounded-t-sm"
             onError={() =>
               setStep((prev) => (prev < chain.length - 1 ? prev + 1 : prev))
@@ -91,7 +101,7 @@ export default function ProductCardByCategories({ product, productFullData }) {
               src={getImageUrl("products", hoverPath)}
               alt={product?.name || "Product image"}
               fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+              sizes={imageSizes}
               className="object-cover rounded-t-sm translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"
               onError={() => setHoverFailed(true)}
             />
@@ -115,6 +125,7 @@ export default function ProductCardByCategories({ product, productFullData }) {
       <div className="p-3">
         <Link
           href={`/product/${productFullData?.slug}`}
+          prefetch={false}
           className="text-sm sm:text-base font-semibold text-gray-800 mb-2 block"
         >
           {product?.name}
