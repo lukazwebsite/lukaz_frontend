@@ -299,10 +299,7 @@ export default function InternationalProductDetails({ product }) {
                 <div className="flex items-center gap-1">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
-
-                      <>
-                        <StarIcon key={i} filled={i < Math.floor(product?.review_avg_rating)} />
-                      </>
+                      <StarIcon key={i} filled={i < Math.floor(product?.review_avg_rating)} />
                     ))}
                   </div>
                   <span className="text-sm text-gray-600">({product?.review?.length} reviews)</span>
