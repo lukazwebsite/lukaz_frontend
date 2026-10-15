@@ -799,7 +799,7 @@ export default function CartCheckoutPage() {
                                     className="border bg-white border-[#3A9E75] focus:outline-none 
                    focus:ring-[#3A9E75] focus:border-[#3A9E75]
                    px-3 flex-grow rounded-md rounded-l-md rounded-r-none text-sm "
-                                    value={cuponCode}
+                                    value={cuponCode ?? ""}
                                     onChange={(e) => setCuponCode(e.target.value)}
                                 />
                                 <button
