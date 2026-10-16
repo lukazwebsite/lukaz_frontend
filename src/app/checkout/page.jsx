@@ -490,13 +490,14 @@ export default function CartCheckoutPage() {
                     dispatch({ type: "CLEAR_CART" });
                     window.location.href = response?.data?.payment_url;
                 } else {
-                    console.error("Order failed:", response.data);
+                    console.error("Order failed:", JSON.stringify(response?.data));
+                    toast.error(response?.data?.message || "Could not place the order. Please try again.");
                 }
 
 
             } catch (error) {
                 console.error("Error placing order:", error);
-                toast.error("Something went wrong while placing the order.");
+                toast.error(error?.response?.data?.message || "Something went wrong while placing the order.");
             } finally {
                 setLoading(false)
             }
@@ -799,7 +800,7 @@ export default function CartCheckoutPage() {
                                     className="border bg-white border-[#3A9E75] focus:outline-none 
                    focus:ring-[#3A9E75] focus:border-[#3A9E75]
                    px-3 flex-grow rounded-md rounded-l-md rounded-r-none text-sm "
-                                    value={cuponCode}
+                                    value={cuponCode ?? ""}
                                     onChange={(e) => setCuponCode(e.target.value)}
                                 />
                                 <button

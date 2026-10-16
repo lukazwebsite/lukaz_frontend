@@ -23,8 +23,10 @@ function cartReducer(state, action) {
                 return {
                     ...state,
                     items: state.items.map((item) =>
-                        item.product_id === action.payload.product_id
-                            ? { ...item, quantity: item.quantity + 1 }
+                        item?.productData?.product_id === action.payload?.productData?.product_id &&
+                            item?.selectedSize === action.payload?.selectedSize &&
+                            item?.selectedColor === action.payload?.selectedColor
+                            ? { ...item, quantity: item.quantity + (action.payload?.quantity || 1) }
                             : item
                     ),
                 };
