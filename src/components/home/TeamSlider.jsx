@@ -83,6 +83,8 @@ const SPEED = 35
 // Repeat the list until one copy has at least this many cards, so a single copy
 // is wider than any screen and the two-copy loop never shows a gap.
 const MIN_CARDS_PER_COPY = 20
+// A team this small is shown as plain cards, with no loop.
+const MAX_STATIC_MEMBERS = 2
 // Pointer movement (px) before a press counts as a drag instead of a click.
 const DRAG_THRESHOLD = 5
 
@@ -115,7 +117,9 @@ export default function TeamSlider({ members }) {
       const gap = parseFloat(getComputedStyle(track).columnGap) || 0
       const needed = list.length * card.offsetWidth + (list.length - 1) * gap
       halfRef.current = 0
-      setFits(needed <= wrap.clientWidth + 1)
+      // Only 1-2 members stay still; any larger team loops endlessly, even
+      // when all the cards would fit on screen.
+      setFits(list.length <= MAX_STATIC_MEMBERS && needed <= wrap.clientWidth + 1)
     }
     check()
     const ro = new ResizeObserver(check)
