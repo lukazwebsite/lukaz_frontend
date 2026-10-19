@@ -2,7 +2,7 @@
 
 import { getImageUrl, getFallbackImageUrl, PLACEHOLDER_IMAGE } from "@/utils/helpers";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -33,19 +33,33 @@ function buildImageList(outlet) {
 
 // ── FallbackImg — tries primary src, falls back to fallback, then placeholder ─
 
-function FallbackImg({ primary, fallback, alt, className, style }) {
+// `onFail` is called when neither host has the file, so the page can drop the
+// photo instead of showing a grey placeholder tile.
+// function FallbackImg({ primary, fallback, alt, className, style }) {
+function FallbackImg({ primary, fallback, alt, className, style, onFail }) {
   const [src, setSrc] = useState(primary);
+  const imgRef = useRef(null);
 
   const handleError = () => {
     if (src === primary && fallback) {
       setSrc(fallback);
     } else if (src !== PLACEHOLDER_IMAGE) {
       setSrc(PLACEHOLDER_IMAGE);
+      onFail?.();
     }
   };
 
+  // Server-rendered images can fail before React hydrates, so onError never
+  // fires for them. Check the element's state once it is live.
+  useEffect(() => {
+    const node = imgRef.current;
+    if (node && node.complete && node.naturalWidth === 0) handleError();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src]);
+
   return (
     <img
+      ref={imgRef}
       src={src}
       alt={alt || ""}
       className={className}
@@ -107,7 +121,13 @@ function Lightbox({ images, index, onClose, onPrev, onNext }) {
 // ── Main ─────────────────────────────────────────────────────────────────────
 
 export default function OutletDetail({ outlet }) {
-  const images = buildImageList(outlet);
+  // const images = buildImageList(outlet);
+  // A gallery row can point at a file that no longer exists on either host.
+  // Those photos are hidden, and the photo count follows.
+  const [failedImages, setFailedImages] = useState([]);
+  const images = buildImageList(outlet).filter((img) => !failedImages.includes(img.primary));
+  const markFailed = (primary) =>
+    setFailedImages((list) => (list.includes(primary) ? list : [...list, primary]));
   const phone = outlet?.manager_phone || outlet?.contact;
   const href = mapHref(outlet);
 
@@ -134,10 +154,12 @@ export default function OutletDetail({ outlet }) {
       <div className="relative w-full h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden mb-8 shadow-lg bg-gray-100">
         {images[0] && (
           <FallbackImg
+            key={images[0].primary}
             primary={images[0].primary}
             fallback={images[0].fallback}
             alt={outlet?.name || "Outlet"}
             className="absolute inset-0 w-full h-full object-cover"
+            onFail={() => markFailed(images[0].primary)}
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -216,13 +238,14 @@ export default function OutletDetail({ outlet }) {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {images.map((img, i) => (
-                <button key={i} type="button" onClick={() => openLightbox(i)}
+                <button key={img.primary} type="button" onClick={() => openLightbox(i)}
                   className="relative group h-28 rounded-xl overflow-hidden border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[#3A9E75] bg-gray-100">
                   <FallbackImg
                     primary={img.primary}
                     fallback={img.fallback}
                     alt={`${outlet?.name} photo ${i + 1}`}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onFail={() => markFailed(img.primary)}
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                     <svg className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">

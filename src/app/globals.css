@@ -11,6 +11,24 @@
   font-family: var(--font-space-grotesk), sans-serif;
 }
 
+/* Section titles (eyebrow + heading), see components/shared/SectionHeading.jsx */
+.font-heading {
+  font-family: var(--font-outfit), sans-serif;
+}
+
+.font-label {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/* Hide the scrollbar on swipe tracks (Team / Outlets on mobile) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -194,3 +212,30 @@ body {
 }
 
 
+
+/* Ribbon under the home banner: the track holds two identical copies, so
+   moving it by half its width loops without a jump. */
+@keyframes ribbonScroll {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.ribbon-marquee-track {
+  animation: ribbonScroll linear infinite;
+}
+
+.ribbon-marquee:hover .ribbon-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ribbon-marquee-track {
+    animation: none;
+  }
+}
+
+/* Section titles: the tight Outfit tracking squeezes the gap between words
+   ("VISITOUR OUTLETS"), so the word gap is opened up again. */
+.section-title {
+  word-spacing: 0.2em;
+}

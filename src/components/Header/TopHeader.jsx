@@ -47,12 +47,12 @@ export default function TopHeader({notices}) {
   return (
     <>
       {/* Top Header */}
-      <div className="bg-white text-sm border-b border-gray-200 relative z-20">
+      <div className="bg-[#237A52] text-white relative z-20">
         <div className="px-4 flex justify-center items-center h-8 max-w-screen-xl mx-auto">
-          <p className="text-center">{current?.title}</p>
+          <p className="text-center text-[11px] font-bold uppercase tracking-wide">{current?.title}</p>
           <button
             onClick={() => setOpenDrawer(true)}
-            className="ml-2 p-1 hover:bg-gray-100 rounded"
+            className="ml-2 p-1 hover:bg-white/15 rounded"
           >
             <ChevronDown size={16} />
           </button>

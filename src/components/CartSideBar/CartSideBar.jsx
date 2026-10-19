@@ -49,7 +49,7 @@ export default function CartSideBar() {
       <div className="flex gap-2 justify-center items-center p-2 relative cursor-pointer">
         <ShoppingBag size={23} onClick={() => setVisibleRight(true)} />
         {cart?.length > 0 && (
-          <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 bg-[#237A52] text-white text-[10px] font-semibold rounded-full h-4 w-4 flex items-center justify-center">
             {cart?.length}
           </span>
         )}
