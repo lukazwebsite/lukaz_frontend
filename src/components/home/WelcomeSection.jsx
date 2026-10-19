@@ -24,11 +24,12 @@ export default function WelcomeSection() {
 
 
     return (
-        <section className="text-center pt-4 md:pt-14 px-4">
+        // <section className="text-center pt-4 md:pt-14 px-4">
+        <section className="text-center px-4">
             {/* Title */}
-            <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-5xl font-bold md:mb-4">
+            {/* <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-5xl font-bold md:mb-4">
                 Welcome to LUKAZ
-            </h1>
+            </h1> */}
 
             {/* Subtitle */}
             {/* <p className="text-gray-700 max-w-2xl mx-auto mb-4 text-base">

@@ -7,8 +7,12 @@ import RatingSlider from "@/components/home/RatingSlider";
 import ShopByBrandsSlider from "@/components/home/ShopByBrandsSlider";
 import VideoSection from "@/components/home/VideoSection";
 import Container from "@/components/shared/Container";
-import { getBrands, getCategories, getFeaturedMenus, getMenus, getProductByCategory, getProducts, getReviews, getTeamMembers, getVideos } from "@/utils/actions";
+// import { getBrands, getCategories, getFeaturedMenus, getMenus, getProductByCategory, getProducts, getReviews, getTeamMembers, getVideos } from "@/utils/actions";
+import { getBrands, getCategories, getFeaturedMenus, getHeroTitle, getMenus, getProductByCategory, getProducts, getReviews, getRibbons, getSiteVideos, getTeamMembers, getVideos } from "@/utils/actions";
 import TeamSlider from "@/components/home/TeamSlider";
+import RibbonMarquee from "@/components/home/RibbonMarquee";
+import HeroVideo from "@/components/home/HeroVideo";
+import FilmSection from "@/components/home/FilmSection";
 import FeatureItems from "@/components/home/FeatureItems";
 import WelcomeSection from "@/components/home/WelcomeSection";
 import AccessoriesSlider from "@/components/home/AccessoriesSlider";
@@ -26,6 +30,9 @@ export default async function Home() {
   const categories = await getCategories()
   const featureItems = await getProductByCategory(91)
   const videos = await getVideos();
+  const siteVideos = await getSiteVideos();
+  const heroTitle = await getHeroTitle();
+  const ribbons = await getRibbons();
   const teamMembers = await getTeamMembers();
   const categoryTree = await getFeaturedMenus();
 
@@ -37,8 +44,14 @@ export default async function Home() {
     <div className="">
 
       {/* <TopBanner /> */}
-      <Banner/>
-      <VideoSection video={videos[0]}/>
+      {/* <Banner/> */}
+      {/* <RibbonMarquee ribbons={ribbons} /> */}
+      {/* <VideoSection video={videos[0]}/> */}
+      {/* <VideoSection video={videos[0]} uploaded={siteVideos?.hero} /> */}
+      <HeroVideo video={videos[0]} uploaded={siteVideos?.hero} heroTitle={heroTitle} />
+      <div id="after-hero">
+        <RibbonMarquee ribbons={ribbons} />
+      </div>
       <Container>
         {/* <Banner/> */}
         <WelcomeSection />
@@ -62,12 +75,18 @@ export default async function Home() {
 
       </Container>
 
-      <VideoSection video={videos[1]} />
+      {/* <VideoSection video={videos[1]} /> */}
+      {/* <VideoSection video={videos[1]} uploaded={siteVideos?.bottom} /> */}
+      <FilmSection video={videos[1]} uploaded={siteVideos?.bottom} />
 
 
       <Container>
         <TeamSlider members={teamMembers} />
-        <OutletsSection/>
+      </Container>
+
+      <OutletsSection/>
+
+      <Container>
         <RatingSlider reviews={reviews?.data} />
       </Container>
 

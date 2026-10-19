@@ -11,12 +11,12 @@ import { usePathname } from 'next/navigation';
 //   { label: 'Luxury', href: '/shop/luxury', id: 85 },
 //   { label: 'International Deal', href: '/international-shop' },
 // ];
-const menuItems = [
+export const menuItems = [
   { label: 'Sneakers', href: '/shop/sneakers', id: 1 },
   { label: 'Outfits', href: '/shop/outfits', id: 2 },
   // { label: 'Luxury', href: '/shop/luxury', id: 22 },
   { label: 'Luxury', href: '/shop/luxury', id: 85 },
-  { label: 'International Deal', href: '/international-shop' },
+  //   { label: 'International Deal', href: '/international-shop' },
 ];
 
 export default function SecondMenu() {
@@ -34,7 +34,7 @@ export default function SecondMenu() {
   }
 
   return (
-    <div>
+    <div className="md:hidden">
       <div className="flex justify-center gap-1 md:gap-4 lg:gap-6 xl:gap-8 py-1  bg-white shadow-sm flex-wrap">
         {menuItems?.map((item, index) => {
 

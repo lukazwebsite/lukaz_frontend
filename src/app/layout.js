@@ -1,6 +1,6 @@
 // app/layout.tsx
 import "./globals.css";
-import { DM_Sans, Space_Grotesk } from "next/font/google";
+import { DM_Sans, Space_Grotesk, Outfit, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
@@ -24,6 +24,21 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
+// Section-title fonts: Outfit for headings, JetBrains Mono for eyebrow labels
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
+  variable: "--font-outfit",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
+
 export const metadata = {
   title: "Lukaz Belive in Quality",
   description: "E-commerce Platform",
@@ -39,7 +54,7 @@ export default async function RootLayout({ children }) {
   const notices = await getNotices();
 
   return (
-    <html className={`${dmSans.variable} ${spaceGrotesk.variable}`} lang="en">
+    <html className={`${dmSans.variable} ${spaceGrotesk.variable} ${outfit.variable} ${jetbrainsMono.variable}`} lang="en">
       <body>
         <Provider>
           <Header mainMenus={mainMenus} categories={categories} notices={notices} />

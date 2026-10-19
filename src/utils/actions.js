@@ -372,6 +372,74 @@ export async function getVideos() {
 }
 
 
+export async function getSiteVideos() {
+  const API_URL = `${baseUrl}/api/site-videos`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: REVALIDATE },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch site videos: ${res.statusText}`);
+    }
+
+    // { hero: {...}, bottom: {...} }, a section is missing until a video is uploaded
+    const json = await res.json();
+    return json || {};
+  } catch (error) {
+    console.error("Error fetching site videos:", error);
+    return {};
+  }
+}
+
+
+// { eyebrow, title }, either may be null until the admin fills it in
+export async function getHeroTitle() {
+  const API_URL = `${baseUrl}/api/hero-title`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: REVALIDATE },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch hero title: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    return json || {};
+  } catch (error) {
+    console.error("Error fetching hero title:", error);
+    return {};
+  }
+}
+
+
+export async function getRibbons() {
+  const API_URL = `${baseUrl}/api/ribbons`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: REVALIDATE },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch ribbons: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    return Array.isArray(json) ? json : [];
+  } catch (error) {
+    console.error("Error fetching ribbons:", error);
+    return [];
+  }
+}
+
+
 export async function getTeamMembers() {
   const API_URL = `${baseUrl}/api/team-members`;
 

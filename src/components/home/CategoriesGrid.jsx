@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from 'react'
 import { getImageUrl } from '@/utils/helpers'
 import { useRouter } from 'next/navigation'
 import { useFilter } from '@/context/FilterContext'
-import { ChevronRight, ChevronLeft } from 'lucide-react'
+import { ChevronRight, ChevronLeft, Sparkles } from 'lucide-react'
+import SectionHeading from '@/components/shared/SectionHeading'
 
 /**
  * Shop by Category section on the homepage.
@@ -57,48 +58,53 @@ export default function CategoriesGrid({ categoryTree = [] }) {
   const goToLevel = (index) => setTrail(prev => prev.slice(0, index + 1))
 
   return (
-    <section ref={sectionRef} className="py-16 bg-linear-to-r from-[#8ae5bf] via-[#68bf9b] to-[#70bf9c]">
+    <section ref={sectionRef} className="py-16 md:py-20 bg-[#EAF4EF]">
       {/* ── Heading ── */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl md:text-3xl font-semibold text-white space-grotesk">
-          Shop by Category
-        </h2>
-        <p className="text-white mt-1 text-sm md:text-base space-grotesk">
-          Find your perfect pair by category
-        </p>
+      <div className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16">
+        <div className="flex justify-center mb-4">
+          <span className="font-label inline-flex items-center gap-2 rounded-full border border-[#237A52]/20 bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#237A52]">
+            <Sparkles size={12} />
+            {items.length} {current ? 'collections' : 'curated categories'}
+          </span>
+        </div>
+        <SectionHeading
+          align="center"
+          title={current ? current.name : 'Shop by Category'}
+          subtitle="Find your perfect pair and complete wardrobe essentials."
+        />
       </div>
 
       {/* ── Breadcrumb (visible once drilled in) ── */}
       {current && (
         <div className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 mb-4">
-          <div className="flex flex-wrap items-center gap-2 rounded-md bg-white/20 px-4 py-2 text-sm text-white">
+          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm text-gray-600">
             <button
               onClick={goBack}
-              className="flex items-center gap-1 font-semibold hover:text-white/80 transition-colors"
+              className="flex items-center gap-1 font-semibold text-[#237A52] hover:text-[#1b6443] transition-colors"
             >
               <ChevronLeft size={16} />
               Back
             </button>
 
-            <span className="text-white/50">|</span>
+            <span className="text-gray-300">|</span>
 
             {/* "All Categories" root crumb */}
             <button
               onClick={() => setTrail([])}
-              className="hover:text-white/80 transition-colors"
+              className="hover:text-[#237A52] transition-colors"
             >
               All Categories
             </button>
 
             {trail.map((node, i) => (
               <span key={node.slug ?? i} className="flex items-center gap-1">
-                <ChevronRight size={14} className="text-white/60" />
+                <ChevronRight size={14} className="text-gray-400" />
                 <button
                   onClick={() => goToLevel(i)}
                   className={
                     i === trail.length - 1
-                      ? 'font-bold text-white'
-                      : 'hover:text-white/80 transition-colors'
+                      ? 'font-bold text-[#09090C]'
+                      : 'hover:text-[#237A52] transition-colors'
                   }
                 >
                   {node.name}
@@ -112,7 +118,7 @@ export default function CategoriesGrid({ categoryTree = [] }) {
       {/* ── Category grid ── */}
       <div
         key={current?.slug ?? 'root'}
-        className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4"
+        className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 md:gap-4"
       >
         {items.map((item, idx) => {
           const hasChildren = (item?.childs?.length ?? 0) > 0
@@ -121,45 +127,43 @@ export default function CategoriesGrid({ categoryTree = [] }) {
             <div
               key={item?.slug ?? idx}
               onClick={() => handleSelect(item)}
-              className="group h-75 md:h-75 lg:h-82.5 xl:h-85 rounded-md bg-cover bg-center relative overflow-hidden cursor-pointer"
+              className="group cursor-pointer rounded-2xl border border-gray-100 bg-white p-2.5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#237A52]/40 hover:shadow-lg"
             >
-              {/* Background image */}
-              <span
-                className="absolute inset-0 bg-center bg-cover transition-transform duration-700 scale-100 group-hover:scale-105"
-                style={{ backgroundImage: `url(${getImageUrl('category', item?.thumbnail ?? item?.menuImage)})` }}
-              />
-
-              {/* Dark overlay */}
-              <span className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
+              {/* Image */}
+              <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-gray-100">
+                <span
+                  className="absolute inset-0 bg-center bg-cover transition-transform duration-700 group-hover:scale-105"
+                  style={{ backgroundImage: `url(${getImageUrl('category', item?.thumbnail ?? item?.menuImage)})` }}
+                />
+              </div>
 
               {/* Label */}
-              <span className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-2 p-3 pb-5">
-                <span className="min-w-0">
-                  <span className="block truncate text-[#3de8a0] text-base font-bold space-grotesk leading-tight">
-                    {item?.name?.toUpperCase()}
+              <div className="flex items-center justify-between gap-2 px-1 pt-3 pb-1">
+                <div className="min-w-0">
+                  <span className="font-heading block truncate text-xs md:text-sm font-extrabold uppercase tracking-tight text-[#09090C]">
+                    {item?.name}
                   </span>
-                  {hasChildren && (
-                    <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-wider text-white/75">
-                      {item.childs.length} {item.childs.length === 1 ? 'collection' : 'collections'}
-                    </span>
-                  )}
-                </span>
+                  <span className="font-label mt-0.5 block text-[10px] text-gray-400">
+                    {hasChildren
+                      ? `${item.childs.length} ${item.childs.length === 1 ? 'collection' : 'collections'}`
+                      : 'Explore'}
+                  </span>
+                </div>
 
                 {/* Arrow badge */}
                 <span
-                  className="grid h-7 w-7 shrink-0 place-items-center rounded-full
-                             bg-white/20 backdrop-blur-sm transition-all duration-300
-                             group-hover:translate-x-0.5 group-hover:bg-[#3A9E75] text-white"
+                  className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gray-100 text-gray-600
+                             transition-all duration-300 group-hover:translate-x-0.5 group-hover:bg-[#237A52] group-hover:text-white"
                 >
                   <ChevronRight size={14} />
                 </span>
-              </span>
+              </div>
             </div>
           )
         })}
 
         {items.length === 0 && (
-          <p className="col-span-full py-6 text-center text-white/80 text-sm">
+          <p className="col-span-full py-6 text-center text-gray-500 text-sm">
             No categories found.
           </p>
         )}
