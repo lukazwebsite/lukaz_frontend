@@ -316,7 +316,7 @@ export default function ProductDetails({ product }) {
     return (
         <Container className="pt-4 pb-10 md:py-10">
             {/* Breadcrumb */}
-            <div className=" text-xs sm:text-sm flex items-center space-x-2  text-gray-500 mb-4 md:mb-8">
+            <div className=" text-xs sm:text-sm flex flex-wrap items-center gap-x-2 gap-y-1 text-gray-500 mb-4 md:mb-8">
                 <Link href="/" className="hover:text-gray-700">
                     Home
                 </Link>
@@ -386,7 +386,7 @@ export default function ProductDetails({ product }) {
                             <>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
-                                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-700 rounded-full w-9 h-9 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-700 rounded-full w-9 h-9 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-200"
                                     aria-label="Previous image"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -397,7 +397,7 @@ export default function ProductDetails({ product }) {
                                 {/* Next Button */}
                                 <button
                                     onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-700 rounded-full w-9 h-9 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-700 rounded-full w-9 h-9 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-200"
                                     aria-label="Next image"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -406,7 +406,7 @@ export default function ProductDetails({ product }) {
                                 </button>
 
                                 {/* Dot indicators */}
-                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-200">
                                     {selectedColourGalleries.map((_, i) => (
                                         <span
                                             key={i}
@@ -619,7 +619,7 @@ export default function ProductDetails({ product }) {
                                 Select Size and colour to place order
                             </span>
                             :
-                            <div className="flex flex-col sm:flex-row gap-2">
+                            <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2">
                                 <Link
                                     href={isButtonDisable() ? "#" : "/checkout"}
                                     onClick={(e) => {
@@ -667,7 +667,7 @@ export default function ProductDetails({ product }) {
                     </div>
                     <div className=" flex flex-wrap gap-3  justify-start items-center ">
 
-                        <img src={payIcon.src} alt="Payment Methods" className="h-16" />
+                        <img src={payIcon.src} alt="Payment Methods" className="h-12 sm:h-16 w-auto max-w-full object-contain" />
                     </div>
                     {/* Features */}
                     <div>

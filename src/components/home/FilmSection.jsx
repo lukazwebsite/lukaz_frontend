@@ -55,13 +55,13 @@ const FilmSection = ({ uploaded, video }) => {
             )}
           </div>
 
-          <div className="font-label flex shrink-0 items-center gap-2 whitespace-nowrap self-start rounded-full border border-white/15 bg-white/5 px-5 py-3 text-xs sm:text-sm text-gray-200 lg:self-auto">
+          <div className="font-label flex min-w-0 items-center gap-2 self-start rounded-2xl sm:rounded-full border border-white/15 bg-white/5 px-4 sm:px-5 py-3 text-xs sm:text-sm text-gray-200 lg:shrink-0 lg:whitespace-nowrap lg:self-auto">
             <Store size={18} className="shrink-0 text-[#3DDC84]" aria-hidden="true" />
             {content.badge_text}
           </div>
         </div>
 
-        <div className="relative w-full aspect-video overflow-hidden rounded-[28px] bg-black">
+        <div className="relative w-full aspect-[4/5] sm:aspect-[4/3] lg:aspect-video overflow-hidden rounded-2xl sm:rounded-[28px] bg-black">
           {hasUploaded ? (
             <AutoPlayVideo
               src={uploaded.video_url}
@@ -78,12 +78,12 @@ const FilmSection = ({ uploaded, video }) => {
           )}
 
           {/* Chips over the bottom corners */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-2 bg-gradient-to-t from-black/50 to-transparent p-3 sm:p-5">
-            <span className="font-label flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-3 py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.08em] text-gray-100 backdrop-blur-sm">
+          <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-2.5 sm:p-4 lg:inset-x-0 lg:top-auto lg:flex-row lg:flex-wrap lg:items-end lg:gap-2 lg:bg-gradient-to-t lg:from-black/50 lg:to-transparent lg:p-5">
+            <span className="font-label flex items-center gap-1.5 self-start rounded-full border border-white/15 bg-black/60 px-2.5 py-1 lg:gap-2 lg:px-3 lg:py-1.5 text-[9px] sm:text-[10px] lg:text-xs font-semibold uppercase tracking-[0.06em] lg:tracking-[0.08em] text-gray-100 backdrop-blur-sm">
               <span className="h-2 w-2 shrink-0 rounded-full bg-[#2FBF71]" aria-hidden="true" />
               {content.overlay_left}
             </span>
-            <span className="font-label flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-3 py-1.5 text-[10px] sm:text-xs text-gray-100 backdrop-blur-sm">
+            <span className="font-label flex items-center gap-1.5 self-start rounded-full border border-white/15 bg-black/60 px-2.5 py-1 lg:gap-2 lg:px-3 lg:py-1.5 text-[9px] sm:text-[10px] lg:text-xs text-gray-100 backdrop-blur-sm">
               <Sparkles size={14} className="shrink-0 text-[#3DDC84]" aria-hidden="true" />
               {content.overlay_right}
             </span>

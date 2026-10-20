@@ -36,10 +36,18 @@
   }
 } */
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  /* A stray wide element must never make the whole page scroll sideways.
+     "clip" (not "hidden") keeps the sticky header working. */
+  overflow-x: clip;
 }
 
 

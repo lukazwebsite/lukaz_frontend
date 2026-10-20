@@ -47,10 +47,10 @@ function LocationPopup({ isOpen, onClose, outlet }) {
     >
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <div
-        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90dvh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-5 bg-[#3A9E75] text-white">
+        <div className="px-4 sm:px-6 py-5 bg-[#3A9E75] text-white">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-bold text-lg">{outlet.name_bn || outlet.name}</h3>
@@ -59,7 +59,7 @@ function LocationPopup({ isOpen, onClose, outlet }) {
             <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 flex items-center justify-center transition-colors cursor-pointer">✕</button>
           </div>
         </div>
-        <div className="px-6 py-5 space-y-4">
+        <div className="px-4 sm:px-6 py-5 space-y-4">
           {outlet.address_bn && (
             <div className="p-4 rounded-xl bg-gray-50 border border-gray-100">
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">বাংলায় ঠিকানা</p>

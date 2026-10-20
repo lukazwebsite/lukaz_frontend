@@ -24,7 +24,7 @@ const MessengerButton = () => {
   };
 
   return (
-    <div className="fixed bottom-14 right-5 z-50 flex items-center">
+    <div className="fixed bottom-6 right-3 sm:bottom-14 sm:right-5 z-50 flex items-center">
       {/* Tooltip */}
       {/* {showTooltip && (
         <div className="mr-3 px-3 py-1 bg-white text-black text-sm rounded-lg shadow-lg animate-fadeIn">
@@ -49,7 +49,7 @@ const MessengerButton = () => {
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClick}
-          className="relative flex items-center justify-center w-18 h-18  bg-blue-500  hover:scale-110 text-white rounded-full shadow-lg transition"
+          className="relative flex items-center justify-center w-14 h-14 sm:w-18 sm:h-18  bg-blue-500  hover:scale-110 text-white rounded-full shadow-lg transition"
           title="Message us on Messenger"
         >
           {/* <Image
@@ -59,7 +59,7 @@ const MessengerButton = () => {
                         height={60}
                         className=""
                       /> */}
-          <FaFacebookMessenger className="text-4xl" />
+          <FaFacebookMessenger className="text-3xl sm:text-4xl" />
         </a>
       </div>
     </div>

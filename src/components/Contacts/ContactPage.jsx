@@ -98,7 +98,7 @@ export default function ContactPage({ outlets }) {
   return (
     <div className="min-h-screen ">
       {/* Header Section */}
-      <div className="bg-[#3A9E75] text-white py-16">
+      <div className="bg-[#3A9E75] text-white py-10 sm:py-16">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isLoaded ? { opacity: 1, y: 0 } : {}}
@@ -106,8 +106,8 @@ export default function ContactPage({ outlets }) {
 
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">We're Here to Help!</h1>
-            <p className="text-xl opacity-90">Get in touch with us and let's start a conversation</p>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">We're Here to Help!</h1>
+            <p className="text-lg sm:text-xl opacity-90">Get in touch with us and let's start a conversation</p>
           </div>
         </motion.div>
       </div>
@@ -120,7 +120,7 @@ export default function ContactPage({ outlets }) {
       >
         <div className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:grid-rows-1">
           {/* Contact Form */}
-          <motion.div variants={fadeInVariants} className="bg-white rounded-sm shadow-lg p-8">
+          <motion.div variants={fadeInVariants} className="bg-white rounded-sm shadow-lg p-5 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               {["name", "email", "phone", "message"].map((field, idx) => (
@@ -224,7 +224,7 @@ export default function ContactPage({ outlets }) {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
             <div className="space-y-6">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 shrink-0 bg-blue-100 rounded-full flex items-center justify-center">
                   <svg className="w-6 h-6 text-[#3A9E75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -242,7 +242,7 @@ export default function ContactPage({ outlets }) {
               </div>
 
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 shrink-0 bg-blue-100 rounded-full flex items-center justify-center">
                   <svg className="w-6 h-6 text-[#3A9E75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -263,7 +263,7 @@ export default function ContactPage({ outlets }) {
 
 
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 shrink-0 bg-blue-100 rounded-full flex items-center justify-center">
                   <svg className="w-6 h-6 text-[#3A9E75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -287,7 +287,7 @@ export default function ContactPage({ outlets }) {
               </div>
               {/* address 2  */}
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 shrink-0 bg-blue-100 rounded-full flex items-center justify-center">
                   <svg className="w-6 h-6 text-[#3A9E75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -311,7 +311,7 @@ export default function ContactPage({ outlets }) {
               </div>
 
               {/* <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 shrink-0 bg-blue-100 rounded-full flex items-center justify-center">
                   <svg className="w-6 h-6 text-[#3A9E75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -359,7 +359,7 @@ export default function ContactPage({ outlets }) {
               </div>
             </div>
           </div>
-          <div className="rounded-md shadow-sm overflow-hidden w-full md:w-1/2">
+          <div className="rounded-md shadow-sm overflow-hidden w-full h-72 sm:h-96 md:h-auto md:min-h-[24rem] md:w-1/2">
             <iframe
               src="https://www.google.com/maps?q=Haat%20Super%20Mall%2C%203%2F3%20Main%20Road%2C%20Block%20D%2C%20Shahjalal%20Uposhohor%2C%20Sylhet%203100%2C%20Bangladesh&output=embed"
               width="100%"
@@ -368,7 +368,7 @@ export default function ContactPage({ outlets }) {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              className="inset-0"
+              className="inset-0 h-full w-full"
             />
 
             {/* <iframe

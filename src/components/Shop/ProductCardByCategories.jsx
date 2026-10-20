@@ -110,19 +110,19 @@ export default function ProductCardByCategories({ product, productFullData, grid
 
         {/* Discount badge */}
         {product?.regular_price && product?.discount_type == 1 && (
-          <span className="absolute top-5 left-4 bg-[#3A9E75] text-white px-3 py-1 rounded-md text-xs font-medium shadow-sm">
+          <span className="absolute top-5 left-2 sm:left-4 bg-[#3A9E75] text-white px-3 py-1 rounded-md text-xs font-medium shadow-sm">
             -{Math.floor((100 / product.regular_price) * product.discount)}%
           </span>
         )}
         {product?.regular_price && product?.discount_type != 1 && (
-          <span className="absolute top-4 left-4 bg-[#3A9E75] text-white px-3 py-1 rounded-md text-xs font-medium shadow-sm">
+          <span className="absolute top-4 left-2 sm:left-4 bg-[#3A9E75] text-white px-3 py-1 rounded-md text-xs font-medium shadow-sm">
             -{product.discount}
           </span>
         )}
       </div>
 
       {/* Info */}
-      <div className="p-3">
+      <div className="p-2.5 sm:p-3">
         <Link
           href={`/product/${productFullData?.slug}`}
           prefetch={false}
@@ -131,7 +131,7 @@ export default function ProductCardByCategories({ product, productFullData, grid
           {product?.name}
         </Link>
 
-        <div className="flex gap-3 items-center mt-1">
+        <div className="flex flex-wrap gap-x-3 gap-y-0.5 items-center mt-1">
           {product?.regular_price && (
             <p className="text-xs sm:text-sm font-bold text-gray-900 line-through">
               Tk. {product.regular_price}

@@ -185,7 +185,7 @@ export default function InternationalProductDetails({ product }) {
   return (
     <Container className="pt-4 pb-10 md:py-10">
       {/* Breadcrumb */}
-      <div className="flex items-center space-x-2 text-sm text-gray-500 mb-4 md:mb-8">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-gray-500 mb-4 md:mb-8">
         <Link href="/" className="hover:text-gray-700">
           Home
         </Link>
@@ -618,4 +618,3 @@ const ProductCard = ({ product }) => {
 
 
 
- 

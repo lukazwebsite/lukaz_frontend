@@ -89,7 +89,7 @@ export default function ReturnPolicy() {
         >
           <Undo2 className="mx-auto mb-4" size={60} />
 
-          <h1 className="text-4xl md:text-5xl font-bold">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
             {hero.title}
           </h1>
 
@@ -107,7 +107,7 @@ export default function ReturnPolicy() {
         variants={fadeInVariants}
         className="py-8 sm:py-12 px-6 lg:px-8 bg-white"
       >
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-center">
 
           <motion.div variants={fadeInVariants} className="relative overflow-hidden rounded-lg shadow-xl aspect-video group">
             <img
@@ -119,7 +119,7 @@ export default function ReturnPolicy() {
           </motion.div>
 
           <motion.div variants={fadeInVariants}>
-            <h3 className="text-4xl font-semibold text-[#3A9E75] mb-2 leading-tight">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#3A9E75] mb-2 leading-tight">
               Eligibility for Returns
             </h3>
 
@@ -149,7 +149,7 @@ export default function ReturnPolicy() {
           variants={fadeInVariants}
           className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 text-center"
         >
-          <h3 className="text-4xl font-bold text-gray-900 mb-12">
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 sm:mb-12">
             Our Return & Refund Policy
           </h3>
 

@@ -35,19 +35,16 @@ export default function ShopByCategories({ slug }) {
   const updateGridOptions = () => {
     const width = window.innerWidth;
 
-    if (width < 640) {
-      setAvailableGridOptions([2]);
-      if (gridCols > 2) setGridCols(2);
-    } else if (width < 1024) {
-      setAvailableGridOptions([2]);
-      if (gridCols > 4) setGridCols(2);
-    } else if (width < 1324) {
-      setAvailableGridOptions([2, 3]);
-    } else if (width < 1624) {
-      setAvailableGridOptions([2, 3, 4]);
-    } else {
-      setAvailableGridOptions([2, 3, 4, 5]);
-    }
+    let options;
+    if (width < 1024) options = [2];
+    else if (width < 1324) options = [2, 3];
+    else if (width < 1624) options = [2, 3, 4];
+    else options = [2, 3, 4, 5];
+
+    setAvailableGridOptions(options);
+    // This runs from a resize listener registered once, so read the current
+    // column count through the updater and keep it inside what the screen allows.
+    setGridCols((prev) => (options.includes(prev) ? prev : options[options.length - 1]));
   };
 
   useEffect(() => {
@@ -163,7 +160,7 @@ export default function ShopByCategories({ slug }) {
     <>
       <div
         className={cn(
-          "grid gap-6",
+          "grid gap-3 sm:gap-6",
           gridCols === 2 && "grid-cols-2",
           gridCols === 3 && "grid-cols-3",
           gridCols === 4 && "grid-cols-4",

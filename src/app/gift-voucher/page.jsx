@@ -69,7 +69,7 @@ export default function GiftVoucher() {
         >
              <Gift className="mx-auto mb-4 text-white" size={60} />
         
-          <h1 className="text-4xl md:text-5xl font-bold text-white">Gift Vouchers</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">Gift Vouchers</h1>
           <p className="mt-6 leading-relaxed max-w-2xl mx-auto">
             Surprise your loved ones with our exclusive gift vouchers.  
             Choose from different values and let them pick their favorite items.

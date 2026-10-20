@@ -4,9 +4,8 @@ import { DM_Sans, Space_Grotesk, Outfit, JetBrains_Mono } from "next/font/google
 import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
-import SecondMenu from "@/components/Header/SecondMenu";
 import Provider from "@/layout/Provider";
-import { getCategories, getMenus, getNotices } from "@/utils/actions";
+import { getCategories, getMenus, getSiteLogo, getTopBar } from "@/utils/actions";
 import MessengerButton from "@/components/shared/MessengerButton";
 import { GoogleTagManager } from '@next/third-parties/google';
 
@@ -51,14 +50,14 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const categories = await getCategories();
   const mainMenus = await getMenus();
-  const notices = await getNotices();
+  const topBar = await getTopBar();
+  const logo = await getSiteLogo();
 
   return (
     <html className={`${dmSans.variable} ${spaceGrotesk.variable} ${outfit.variable} ${jetbrainsMono.variable}`} lang="en">
       <body>
         <Provider>
-          <Header mainMenus={mainMenus} categories={categories} notices={notices} />
-          <SecondMenu />
+          <Header mainMenus={mainMenus} categories={categories} topBar={topBar} logoUrl={logo?.logo_url} />
           {children}
           <Footer />
         </Provider>
