@@ -139,7 +139,7 @@ export default function InternationalOrderModal({ isOpen, setIsOpen, data }) {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="bg-white rounded-md max-w-md w-full shadow-md p-8"
+            className="bg-white rounded-md max-w-md w-full max-h-[92dvh] overflow-y-auto shadow-md p-5 sm:p-8"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-4">

@@ -63,7 +63,7 @@ export default async function ProductPage({ params }) {
     // console.log("single product fromm server", product?.data[0])
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-0 md:px-4 py-8">
             <ProductDetails product={product?.data[0]} />
         </div>
     );

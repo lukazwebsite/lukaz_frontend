@@ -79,7 +79,7 @@ export default function HeroVideo({ uploaded, video, heroTitle }) {
 
   return (
     <section className="relative w-full overflow-hidden bg-black">
-      <div className="relative w-full h-[72vh] min-h-[460px] max-h-[860px]">
+      <div className="relative w-full h-[72svh] min-h-[460px] max-h-[860px]">
         {!hasMedia ? null : hasUploaded ? (
           <video
             ref={videoRef}
@@ -110,8 +110,8 @@ export default function HeroVideo({ uploaded, video, heroTitle }) {
           {/* Label on top; below it the title and the buttons share one row, centred on each other */}
           <div className="min-w-0">
             {content?.eyebrow && (
-              <p className="font-label mb-1.5 flex items-center gap-2 text-[10px] sm:text-xs leading-none font-semibold uppercase tracking-[0.25em] text-white/90">
-                <span className="h-2 w-2 shrink-0 rounded-full bg-[#2FBF71]" aria-hidden="true" />
+              <p className="font-label mb-1.5 flex items-center gap-1.5 sm:gap-2 text-[8px] min-[400px]:text-[9px] sm:text-xs leading-tight font-semibold uppercase tracking-[0.12em] min-[400px]:tracking-[0.16em] sm:tracking-[0.25em] text-white/90">
+                <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 shrink-0 rounded-full bg-[#2FBF71]" aria-hidden="true" />
                 {content.eyebrow}
               </p>
             )}
@@ -121,13 +121,13 @@ export default function HeroVideo({ uploaded, video, heroTitle }) {
             <div className="min-w-0 2xl:flex-1">
               {content?.title && (
                 // <h1 className="section-title font-heading text-[44px] leading-[0.98] sm:text-6xl lg:text-7xl xl:text-[96px] font-black uppercase tracking-tight text-white">
-                <h1 className="section-title font-heading text-[clamp(28px,7vw,40px)] sm:text-[clamp(32px,5vw,64px)] 2xl:text-[clamp(44px,3.3vw,76px)] leading-[1.05] sm:whitespace-nowrap font-black uppercase tracking-tight text-white">
+                <h1 className="section-title font-heading text-[clamp(28px,7vw,40px)] sm:text-[clamp(32px,5vw,64px)] 2xl:text-[clamp(44px,3.3vw,76px)] leading-[1.05] 2xl:whitespace-nowrap font-black uppercase tracking-tight text-white">
                   {content.title}
                 </h1>
               )}
             </div>
 
-            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 shrink-0">
               {hasUploaded && (
                 <>
                   <button

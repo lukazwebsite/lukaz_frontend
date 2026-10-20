@@ -42,7 +42,7 @@ export default function Pagination({
   }
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-8">
+    <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
       {/* Prev Button */}
       <button
         className={`p-1 border rounded-md hover:bg-gray-100 transition ${

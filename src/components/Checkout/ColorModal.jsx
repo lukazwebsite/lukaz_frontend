@@ -34,7 +34,7 @@ const ColorModal = ({ isOpen, onClose, colors, selectedColor, onColorSelect }) =
         >
           <motion.div
             ref={modalRef}
-            className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto shadow-xl"
+            className="bg-white rounded-lg max-w-md w-full max-h-[80dvh] overflow-y-auto shadow-xl"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}

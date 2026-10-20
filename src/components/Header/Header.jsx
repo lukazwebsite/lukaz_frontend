@@ -19,7 +19,7 @@ import WishListSideBar from "../WishListSidebar/WishListSidebar"
 import { UserContext } from "@/context/UserContext"
 import { usePathname, useRouter } from "next/navigation"
 
-export default function Header({ mainMenus, categories, notices }) {
+export default function Header({ mainMenus, categories, topBar, logoUrl }) {
   const { state, dispatch } = useContext(UserContext)
   const user = state?.user
 
@@ -64,14 +64,14 @@ export default function Header({ mainMenus, categories, notices }) {
   return (
     <div className="sticky top-0 z-50 bg-white">
       {/* Top Header */}
-      <TopHeader notices={notices} />
+      <TopHeader messages={topBar} />
 
       {/* Main Header */}
       <header ref={headerRef} className="bg-white text-[#09090C] border-b border-gray-200 relative">
         <div className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-10">
-          <div className="grid h-14 md:h-16 grid-cols-[1fr_auto_1fr] items-center gap-4">
+          <div className="grid h-14 md:h-16 grid-cols-[minmax(0,1fr)_auto] md:grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4">
             {/* Menu toggle + logo */}
-            <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-6">
               <button
                 ref={toggleRef}
                 onClick={toggleMenu}
@@ -92,16 +92,25 @@ export default function Header({ mainMenus, categories, notices }) {
                 </span>
               </button>
 
+              {/* Uploaded logo from Website Config -> Logo, else the text logo */}
               <Link
                 href="/"
                 aria-label="Lukaz shop"
-                className="font-heading text-2xl md:text-3xl font-black tracking-tighter leading-none"
+                className="font-heading min-w-0 text-xl sm:text-2xl md:text-3xl font-black tracking-tighter leading-none"
               >
-                LUKAZ<span className="text-[#237A52]">.</span>
+                {logoUrl ? (
+                  <img
+                    src={logoUrl}
+                    alt="LUKAZ"
+                    className="block h-8 md:h-10 w-auto max-w-[96px] min-[400px]:max-w-[130px] sm:max-w-[180px] object-contain"
+                  />
+                ) : (
+                  <>LUKAZ<span className="text-[#237A52]">.</span></>
+                )}
               </Link>
             </div>
 
-            {/* Primary nav (desktop). Mobile gets the same links from SecondMenu. */}
+            {/* Primary nav (desktop only), always visible */}
             <nav className="hidden md:flex items-center gap-8">
               {menuItems.map((item) => {
                 const itemLastPath = item.href.split("/").filter(Boolean).pop()
@@ -122,13 +131,27 @@ export default function Header({ mainMenus, categories, notices }) {
             </nav>
 
             {/* Icons */}
-            <div className="col-start-3 flex items-center justify-end gap-1">
+            <div className="col-start-2 md:col-start-3 flex items-center justify-end sm:gap-1">
+              {/* Desktop search (with category dropdown): fills the free space left of the icons, nav stays put */}
+              {isSearchOpen && (
+                <div className="hidden lg:block flex-1 min-w-0 max-w-[420px] mr-3">
+                  <SeachBarwithDropDown
+                    autoFocus
+                    onClose={() => setIsSearchOpen(false)}
+                  />
+                </div>
+              )}
+
+              {/* Stays visible on mobile while open (active state); desktop swaps it for the inline bar */}
               <button
                 onClick={() => setIsSearchOpen(prev => !prev)}
                 aria-label="Search"
-                className="hidden sm:block p-2 cursor-pointer hover:text-[#237A52] transition-colors"
+                aria-expanded={isSearchOpen}
+                className={`p-2 cursor-pointer hover:text-[#237A52] transition-colors ${
+                  isSearchOpen ? "text-[#237A52] lg:hidden" : ""
+                }`}
               >
-                {isSearchOpen ? <X size={22} /> : <Search size={22} />}
+                <Search size={22} />
               </button>
 
               <WishListSideBar />
@@ -147,22 +170,13 @@ export default function Header({ mainMenus, categories, notices }) {
               <Link
                 href={user?.name ? "/dashboard" : "/login"}
                 aria-label={user?.name ? "My account" : "Login"}
-                className="p-2 hover:text-[#237A52] transition-colors"
+                className="hidden lg:block p-2 hover:text-[#237A52] transition-colors"
               >
                 <User size={22} />
               </Link>
             </div>
           </div>
         </div>
-
-        {/* Desktop search, opened from the search icon */}
-        {isSearchOpen && (
-          <div className="hidden sm:block border-t border-gray-100 bg-[#FAFAFC]">
-            <div className="mx-auto max-w-[1640px] px-4 md:px-10 py-3">
-              <SeachBarwithDropDown />
-            </div>
-          </div>
-        )}
 
         {/* Mega Menu */}
         <div ref={dropdownRef}>
@@ -175,10 +189,12 @@ export default function Header({ mainMenus, categories, notices }) {
         </div>
       </header>
 
-      {/* Mobile Search */}
-      <div className="w-full py-2 px-4 flex sm:hidden bg-gray-50">
-        <SeachBarwithDropDown categories={categories} />
-      </div>
+      {/* Mobile Search: opens from the header search icon */}
+      {isSearchOpen && (
+        <div className="w-full py-2 px-3 sm:px-4 flex lg:hidden bg-gray-50">
+          <SeachBarwithDropDown autoFocus onClose={() => setIsSearchOpen(false)} />
+        </div>
+      )}
     </div>
   )
 }

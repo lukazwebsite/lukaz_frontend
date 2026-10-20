@@ -140,7 +140,7 @@ export default function OutletDetail({ outlet }) {
   const nextImg = () => setLightboxIdx((i) => (i + 1) % images.length);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
+    <div className="max-w-5xl mx-auto px-4 py-6 sm:py-10">
 
       {/* Back */}
       <Link href="/outlets" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#3A9E75] mb-6 transition-colors">
@@ -163,7 +163,7 @@ export default function OutletDetail({ outlet }) {
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 p-6">
+        <div className="absolute bottom-0 left-0 p-4 sm:p-6">
           <h1 className="text-white text-2xl sm:text-3xl font-bold">
             {outlet?.name_bn || outlet?.name}
           </h1>

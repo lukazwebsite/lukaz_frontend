@@ -93,9 +93,9 @@ export const AddReviewModal = ({ isOpen, onClose, onSubmit }) => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl"
+            className="bg-white rounded-2xl max-w-2xl w-full max-h-[90dvh] overflow-y-auto shadow-xl"
           >
-            <div className="p-8">
+            <div className="p-5 sm:p-8">
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-2xl font-bold text-gray-900">Write a Review</h3>
                 <button

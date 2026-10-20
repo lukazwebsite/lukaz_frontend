@@ -26,7 +26,7 @@ export default function ReviewList({ reviews }) {
       {/* Reviews Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 gap-6">
         {visibleReviews?.map((review, i) => (
-          <div key={i} className="bg-white p-6 rounded-lg border border-gray-200">
+          <div key={i} className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
             {/* Header: Rating + Verified */}
             <div className="flex items-center gap-2 mb-3">
               <div className="flex gap-2">
@@ -71,7 +71,7 @@ export default function ReviewList({ reviews }) {
       </div>
 
       {/* Load More & Show Less Buttons */}
-      <div className="text-center mt-8 space-x-4">
+      <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mt-8">
         {visibleCount < reviews.length && (
           <button
             onClick={handleLoadMore}

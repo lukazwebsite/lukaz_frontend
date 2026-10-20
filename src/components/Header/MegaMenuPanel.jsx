@@ -78,10 +78,10 @@ export default function MegaMenuPanel({ isOpen, mainMenus, onClose, headerRef })
     <div
       style={{
         top: offsetTop,
-        height: `calc(100vh - ${offsetTop}px)`,
+        height: `calc(100dvh - ${offsetTop}px)`,
         transitionTimingFunction: "cubic-bezier(.16,.84,.32,1)",
       }}
-      className={`fixed left-0 right-0 z-40 w-screen
+      className={`fixed left-0 right-0 z-40 w-full
         flex flex-col bg-white text-black shadow-xl
         transition-[opacity,transform] duration-520 will-change-transform
         ${isOpen
@@ -141,8 +141,9 @@ export default function MegaMenuPanel({ isOpen, mainMenus, onClose, headerRef })
 
         {/* Auto-fill keeps tiles a fixed size instead of stretching to fill the
             row, so a handful of categories do not render as huge cards. */}
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3
-                        sm:grid-cols-[repeat(auto-fill,minmax(170px,1fr))]">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(135px,1fr))] gap-2.5
+                        min-[400px]:grid-cols-[repeat(auto-fill,minmax(150px,1fr))] min-[400px]:gap-3
+                        sm:grid-cols-[repeat(auto-fill,minmax(170px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
           {items.map((item, i) => {
             const childCount = item?.childs?.length ?? 0
 
@@ -211,9 +212,10 @@ export default function MegaMenuPanel({ isOpen, mainMenus, onClose, headerRef })
       </div>
 
       {/* Bottom Bar */}
-      <div className="w-full shrink-0 bg-[#E6F2ED] px-6 py-4 text-[#3A9E75]">
+      <div className="w-full shrink-0 bg-[#E6F2ED] px-4 sm:px-6 py-3 sm:py-4 text-[#3A9E75]">
         <MegaMenuBottomBar />
       </div>
     </div>
   )
 }
+ 

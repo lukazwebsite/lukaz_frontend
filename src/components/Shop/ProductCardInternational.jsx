@@ -44,7 +44,7 @@ export default function ProductCardInternational({ product }) {
 
       className="bg-white rounded-sm  overflow-hidden transform transition-all duration-300 hover:shadow-lg  cursor-pointer"
     >
-      <div className="relative w-full h-80 ">
+      <div className="relative w-full h-56 sm:h-80 ">
         <Link
           href={`/international-product/${product?.slug}`}
           prefetch={false}
@@ -53,13 +53,13 @@ export default function ProductCardInternational({ product }) {
             src={getImageUrl("products", product?.color_thumbnails)}
             alt="product image"
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
+            sizes="(max-width: 767px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
             style={{ objectFit: "cover" }}
             className="rounded-t-sm"
           />
         </Link>
         {(product?.regular_price && product?.discount_type == 1) && (
-          <span className="absolute top-5 left-4 bg-black text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm">
+          <span className="absolute top-5 left-2 sm:left-4 bg-black text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm">
             -{Math.floor(100 / product?.regular_price * product?.discount)}%
           </span>
         )
@@ -67,7 +67,7 @@ export default function ProductCardInternational({ product }) {
 
         {(product?.regular_price && product?.discount_type != 1) && (
 
-          <span className="absolute top-4 left-4 bg-black text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm">
+          <span className="absolute top-4 left-2 sm:left-4 bg-black text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm">
             -{product?.discount}
           </span>
 
@@ -76,7 +76,7 @@ export default function ProductCardInternational({ product }) {
 
         <button
           onClick={() => handleWishList(product)}
-          className="absolute top-4 right-4 bg-white p-2 rounded-full 
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white p-1.5 sm:p-2 rounded-full 
                      shadow-sm hover:scale-105 transition-transform focus:outline-none
                       focus:ring-2 focus:ring-gray-300 cursor-pointer"
           aria-label="Add to wishlist"
@@ -89,7 +89,7 @@ export default function ProductCardInternational({ product }) {
 
         </button>
       </div>
-      <div className="p-3">
+      <div className="p-2.5 sm:p-3">
         <div className="flex justify-between">
           <p className="text-sm text-gray-500 font-medium mb-1">
             {product?.brand_name || "No Brand Found"}
@@ -109,7 +109,7 @@ export default function ProductCardInternational({ product }) {
           prefetch={false}
           className="text-md font-semibold text-gray-800 mb-2"
         >
-          <div className="flex gap-3 items-center mt-1">
+          <div className="flex flex-wrap gap-x-3 gap-y-0.5 items-center mt-1">
             {product?.regular_price && (<p className="text-sm font-bold text-gray-900 line-through">
               Tk. {product?.regular_price}
             </p>)}

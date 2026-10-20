@@ -418,6 +418,52 @@ export async function getHeroTitle() {
 }
 
 
+// { logo_url }, null until the admin uploads a logo
+export async function getSiteLogo() {
+  const API_URL = `${baseUrl}/api/logo`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: REVALIDATE },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch logo: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    return json || {};
+  } catch (error) {
+    console.error("Error fetching logo:", error);
+    return {};
+  }
+}
+
+
+// Sentences for the green bar at the top of every page, in display order
+export async function getTopBar() {
+  const API_URL = `${baseUrl}/api/top-bar`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: REVALIDATE },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch top bar: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    return Array.isArray(json) ? json : [];
+  } catch (error) {
+    console.error("Error fetching top bar:", error);
+    return [];
+  }
+}
+
+
 export async function getRibbons() {
   const API_URL = `${baseUrl}/api/ribbons`;
 

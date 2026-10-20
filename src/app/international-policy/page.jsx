@@ -62,7 +62,7 @@ export default function InternationalOrderPolicy() {
           className="relative z-10 text-center max-w-4xl mx-auto px-6"
         >
           <ShieldCheck className="mx-auto mb-4 text-white" size={60} />
-          <h1 className="text-4xl md:text-5xl font-bold text-white">International Order Policy</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">International Order Policy</h1>
           <p className="mt-6 leading-relaxed max-w-2xl mx-auto">
             This policy explains shipping, customs, and payment rules for international customers.  
             Please review carefully before ordering.
@@ -78,7 +78,7 @@ export default function InternationalOrderPolicy() {
         variants={fadeInVariants}
         className="py-8 sm:py-12  px-6 lg:px-8 bg-white"
       >
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-center">
           <motion.div
             variants={fadeInVariants}
             className="relative overflow-hidden rounded-lg shadow-xl aspect-video group"
@@ -91,7 +91,7 @@ export default function InternationalOrderPolicy() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
           </motion.div>
           <motion.div variants={fadeInVariants}>
-            <h3 className="text-4xl font-semibold text-[#3A9E75] mb-2 leading-tight">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#3A9E75] mb-2 leading-tight">
               Serving Customers Worldwide
             </h3>
             <p className="text-gray-600 leading-relaxed mb-4">
@@ -111,7 +111,7 @@ export default function InternationalOrderPolicy() {
         className="py-8 sm:py-12 bg-[#E6F4EF]"
       >
         <motion.div variants={fadeInVariants} className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 text-center">
-          <h3 className="text-4xl font-bold text-gray-900 mb-12">International Order Terms</h3>
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 sm:mb-12">International Order Terms</h3>
           <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             {policies.map((value, index) => (
               <motion.div

@@ -21,9 +21,7 @@ import ProductListSkeleton from '../Skeletons/ProductListSkeleton';
 //   { label: 'Luxury', key: 'footwear', id: 1038 },
 //   { label: 'Apparel', key: 'apparel', id: 1037 },
 // ];
-// "All Items" has no category, so its id is 0 and the request leaves category_id out.
 const tabs = [
-  { label: 'All Items', key: 'all', id: 0 },
   { label: 'Sneakers', key: 'footwear', id: 1036 },
   { label: 'Luxury', key: 'footwear', id: 1038 },
   { label: 'Apparel', key: 'apparel', id: 1037 },
@@ -35,7 +33,7 @@ export default function ProductSlider() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   // const [activeTab, setActiveTab] = useState(1036);
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
 
   useEffect(() => {
     const fetchProducts = async () => {

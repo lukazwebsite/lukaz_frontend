@@ -55,7 +55,7 @@ export default  function Reviews({reviews}) {
     // console.log("test")
   return (
     <div> 
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-8">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#3A9E75]">Customer Reviews</h2>
          <AddReview/>
         </div>

@@ -20,11 +20,11 @@ const ShipingTimeLine = () => {
 
   return (
     <div className="w-full py-6 bg-white">
-      <div className="max-w-5xl mx-auto flex justify-center gap-12">
+      <div className="max-w-5xl mx-auto flex justify-center gap-4 sm:gap-12 px-2">
         {features.map((feature, idx) => (
           <div
             key={idx}
-            className="flex flex-col items-center text-center space-y-2 text-sm sm:text-base "
+            className="flex flex-col items-center text-center space-y-2 text-xs sm:text-base "
           >
             {feature.icon}
             <p className="font-medium text-gray-700">{feature.title}</p>

@@ -1,124 +1,46 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { ChevronDown, ChevronRight, X } from 'lucide-react';
-import Link from 'next/link';
 
+// Time each sentence stays on screen
+const ROTATE_MS = 4000;
 
-export default function TopHeader({notices}) {
+// Green bar at the top of every page. Sentences come from
+// Website Config -> Top Bar and take turns; an empty list hides the bar.
+export default function TopHeader({ messages }) {
+  const items = (Array.isArray(messages) ? messages : []).filter(
+    (text) => typeof text === 'string' && text.trim() !== ''
+  );
   const [index, setIndex] = useState(0);
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const [closing, setClosing] = useState(false);
 
-  // Auto rotate notices
   useEffect(() => {
+    setIndex(0);
+    if (items.length < 2) return;
+
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % notices.length);
-    }, 4000);
+      setIndex((prev) => (prev + 1) % items.length);
+    }, ROTATE_MS);
     return () => clearInterval(interval);
-  }, []);
+  }, [items.length]);
 
-  // Scroll down to close
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!openDrawer) return;
-
-      const direction = window.scrollY;
-      if (direction > 50) {
-        triggerClose();
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [openDrawer]);
-
-  const triggerClose = () => {
-    setClosing(true);
-    setTimeout(() => {
-      setOpenDrawer(false);
-      setClosing(false);
-    }, 300); // match animation duration
-  };
-
-  const current = notices[index];
-
-// console.log("notices", notices)
+  if (items.length === 0) return null;
 
   return (
-    <>
-      {/* Top Header */}
-      <div className="bg-[#237A52] text-white relative z-20">
-        <div className="px-4 flex justify-center items-center h-8 max-w-screen-xl mx-auto">
-          <p className="text-center text-[11px] font-bold uppercase tracking-wide">{current?.title}</p>
-          <button
-            onClick={() => setOpenDrawer(true)}
-            className="ml-2 p-1 hover:bg-white/15 rounded"
+    <div className="bg-[#237A52] text-white relative z-20">
+      {/* All sentences share one grid cell, so the bar is as tall as the
+          longest one and does not jump when the sentence changes. */}
+      <div className="grid items-center px-3 sm:px-4 min-h-8 py-1.5 max-w-screen-xl mx-auto">
+        {items.map((text, i) => (
+          <p
+            key={i}
+            aria-hidden={i !== index}
+            className={`col-start-1 row-start-1 min-w-0 text-center text-[10px] leading-snug sm:text-[11px] font-bold uppercase tracking-wide break-words transition-opacity duration-500 motion-reduce:transition-none ${
+              i === index ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
           >
-            <ChevronDown size={16} />
-          </button>
-        </div>
+            {text}
+          </p>
+        ))}
       </div>
-
-      {/* Drawer */}
-      {openDrawer && (
-        <div
-          className={`fixed top-0 left-0 right-0 bg-white shadow-md border-b z-50
-            ${closing ? 'animate-slide-up' : 'animate-slide-down'}`}
-        >
-          <div className="max-w-screen-xl mx-auto px-4 py-4 relative">
-            <button
-              onClick={triggerClose}
-              className="absolute right-4 top-4 p-1 hover:bg-gray-100 rounded"
-            >
-              <X size={24} />
-            </button>
-
-            <div className="px-0 sm:px-10 md:px-16 py-6 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-16 mt-6">
-              {notices.map((notice, i) => (
-                <div key={i}>
-                  <p className="font-medium mb-1 sm:mb-6">{notice?.title}</p>
-                  <p className="text-gray-600 text-sm ">{notice?.description}</p>
-                 <Link
-                 href={notice?.href}
-                 className='mt-6 flex gap-1 items-center hover:text-[#3A9E75] cursor-pointer'> 
-                  <p >{notice?.button_text} </p>
-                  <ChevronRight size={16} /></Link>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Animations */}
-      <style jsx>{`
-        .animate-slide-down {
-          animation: slideDown 0.3s ease-out forwards;
-        }
-        .animate-slide-up {
-          animation: slideUp 0.3s ease-in forwards;
-        }
-        @keyframes slideDown {
-          from {
-            transform: translateY(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        @keyframes slideUp {
-          from {
-            transform: translateY(0);
-            opacity: 1;
-          }
-          to {
-            transform: translateY(-100%);
-            opacity: 0;
-          }
-        }
-      `}</style>
-    </>
+    </div>
   );
 }

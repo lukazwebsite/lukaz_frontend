@@ -106,7 +106,7 @@ const products = [
           transition={{ duration: 1, ease: "easeOut" }}
           className="relative z-10 text-center max-w-4xl mx-auto px-6"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 ">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 ">
             About Us
           </h2>
            <p className="text-xl xl:text-[21px] text-gray-100 max-w-2xl mx-auto leading-relaxed">
@@ -127,7 +127,7 @@ const products = [
         variants={fadeInVariants}
         className="py-8 sm:py-12  px-6 lg:px-8 bg-white"
       >
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-center">
           <motion.div
             variants={fadeInVariants}
             className="relative overflow-hidden rounded-lg shadow-xl aspect-video group"
@@ -140,7 +140,7 @@ const products = [
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
           </motion.div>
           <motion.div variants={fadeInVariants}>
-             <h3 className="text-4xl font-semibold text-[#3A9E75] mb-2 leading-tight">
+             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#3A9E75] mb-2 leading-tight">
              The Journey of Lukaz
             </h3>
             <p className="text-md text-gray-700 mb-6 leading-relaxed">
@@ -165,8 +165,8 @@ const products = [
         className="py-8 sm:py-12  bg-[#E6F4EF]"
       >
         <motion.div variants={fadeInVariants} className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 text-center">
-          <h3 className="text-4xl font-bold text-gray-900 mb-12">Our Qualities </h3>
-          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 sm:mb-12">Our Qualities </h3>
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {values.map((value, index) => (
               <motion.div
                 key={index}
@@ -195,7 +195,7 @@ const products = [
       >
  <motion.div variants={fadeInVariants} className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <h3 className="text-4xl font-bold text-gray-900 mb-4">Products That Define Us</h3>
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Products That Define Us</h3>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Each item in our collection is a testament to our commitment to quality, design, and purpose.
             </p>
@@ -243,11 +243,11 @@ const products = [
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={staggerContainer}
-        className="py-20 px-6 lg:px-8 bg-[#E6F4EF]"
+        className="py-12 sm:py-20 px-6 lg:px-8 bg-[#E6F4EF]"
       >
         <motion.div variants={fadeInVariants} className="max-w-7xl mx-auto text-center">
-          <h3 className="text-4xl font-bold text-gray-900 mb-12">Meet the Minds Behind Minimal</h3>
-          <motion.div variants={staggerContainer} className="flex flex-wrap items-center justify-center gap-20">
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 sm:mb-12">Meet the Minds Behind Minimal</h3>
+          <motion.div variants={staggerContainer} className="flex flex-wrap items-center justify-center gap-10 sm:gap-20">
             {teamMembers.map((member, index) => (
               <motion.div key={index} variants={fadeInVariants} className="flex flex-col items-center text-center">
                 <div className="relative w-48 h-48 rounded-full overflow-hidden mb-6 border-4 border-gray-100 shadow-lg group">
@@ -274,10 +274,10 @@ const products = [
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={fadeInVariants}
-        className="py-20 px-6 lg:px-8 bg-[#3A9E75] text-white"
+        className="py-12 sm:py-20 px-6 lg:px-8 bg-[#3A9E75] text-white"
       >
         <div className="max-w-4xl mx-auto text-center">
-          <h3 className="text-4xl font-bold mb-6">Experience Minimal</h3>
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6">Experience Minimal</h3>
           <p className="text-lg text-gray-100 mb-12">
             Discover our thoughtfully designed collection and bring simplicity into your life.
           </p>

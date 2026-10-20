@@ -73,7 +73,7 @@ export default function LoginPage() {
         </div>
 
         {/* Right Column: Login Form */}
-        <div className="p-8 lg:p-12 flex flex-col justify-center ">
+        <div className="p-5 sm:p-8 lg:p-12 flex flex-col justify-center ">
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Login</h1>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>

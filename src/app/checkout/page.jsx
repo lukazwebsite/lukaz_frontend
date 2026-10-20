@@ -333,29 +333,35 @@ export default function CartCheckoutPage() {
 
 
     const applyPromoCode = async () => {
+        if (!cuponCode?.trim()) {
+            toast.error("Please enter a coupon code")
+            return
+        }
+
         setApplyCuponLoading(true)
         try {
             const { data } = await axiosInstance.post("/get-discount", {
-                promo_code: cuponCode
+                promo_code: cuponCode,
+                phone: phoneNumber || null
             });
-            if (data?.discount_type == 0) {
-                const calculatedDiscount = (cartSubtotal * data?.discount) / 100
-                if (calculatedDiscount >= data?.max_discount) {
-                    setDiscountAmount(data?.max_discount)
 
-                }
-                else {
-                    setDiscountAmount(calculatedDiscount)
-                }
+            // Same rule as the server: max_discount 0 means no cap, and the
+            // discount never goes above the subtotal.
+            const maxDiscount = Number(data?.max_discount) || 0
+            let discount = data?.discount_type == 1
+                ? Number(data?.discount)
+                : (cartSubtotal * Number(data?.discount)) / 100
 
+            if (maxDiscount > 0) {
+                discount = Math.min(discount, maxDiscount)
             }
-            else {
-                setDiscountAmount(data?.discount)
-            }
-            // console.log("promo code res", data)
-            // setDiscountAmount(data?.discount)
+            discount = Math.min(discount, cartSubtotal)
+
+            setDiscountAmount(Math.round(discount * 100) / 100)
+            toast.success("Coupon applied")
         } catch (error) {
-            console.log("faild to get discount by promo code", error)
+            setDiscountAmount(0)
+            toast.error(error?.response?.data?.message || "Could not apply the coupon")
         }
         finally {
             setApplyCuponLoading(false)
@@ -369,7 +375,8 @@ export default function CartCheckoutPage() {
         if (!errorMessage) {
             const orderData = {
                 shipping_cost: currentShippingCharge,
-                promo_code: cuponCode || null,
+                // Only a code that was applied and shown as a discount is sent.
+                promo_code: discountAmount > 0 ? cuponCode : null,
                 description: "",
                 payment_method: selectedPaymentMethod,
                 payment_type: isPartialPayment ? "partial" : "others",
@@ -617,7 +624,7 @@ export default function CartCheckoutPage() {
 
                                     <div className="flex items-center gap-2 sm:gap-3 ">
                                         {/* image section */}
-                                        <div className="h-full  ">
+                                        <div className="h-full shrink-0">
                                             <Image
                                                 src={getImageUrl("products", item?.image)}
                                                 alt={item.name}
@@ -799,9 +806,12 @@ export default function CartCheckoutPage() {
                                     placeholder="Coupon Code"
                                     className="border bg-white border-[#3A9E75] focus:outline-none 
                    focus:ring-[#3A9E75] focus:border-[#3A9E75]
-                   px-3 flex-grow rounded-md rounded-l-md rounded-r-none text-sm "
+                   px-3 min-w-0 flex-grow rounded-md rounded-l-md rounded-r-none text-sm "
                                     value={cuponCode ?? ""}
-                                    onChange={(e) => setCuponCode(e.target.value)}
+                                    onChange={(e) => {
+                                        setCuponCode(e.target.value)
+                                        setDiscountAmount(0)
+                                    }}
                                 />
                                 <button
                                     className="bg-[#3A9E75] focus:border-[#3A9E75] cursor-pointer text-white px-4 py-1.5
@@ -888,7 +898,7 @@ export default function CartCheckoutPage() {
 
                                     <div className=" flex flex-wrap gap-3  justify-between items-center ">
 
-                                        <img src={payIcon.src} alt="Payment Methods" className="h-12" />
+                                        <img src={payIcon.src} alt="Payment Methods" className="h-12 w-auto max-w-full object-contain" />
                                     </div>
                                 </div>
 

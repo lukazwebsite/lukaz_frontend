@@ -65,7 +65,7 @@ const paymentMethods = [
 
 const headingClass =
   'font-label mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-[#8DE8B8]';
-const linkClass = 'text-sm text-white/90 transition hover:text-white hover:underline';
+const linkClass = 'text-sm text-white/90 transition hover:text-white hover:underline [overflow-wrap:anywhere]';
 
 export default function Footer() {
   const { setActiveSection } = useDashboard();
@@ -80,14 +80,14 @@ export default function Footer() {
         <div className="relative">
           <span
             aria-hidden="true"
-            className="font-heading pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 translate-y-[-10%] select-none whitespace-nowrap font-black uppercase leading-[0.85] tracking-tight text-white/[0.06]"
-            style={{ fontSize: 'clamp(160px, 27vw, 460px)' }}
+            className="font-heading pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 translate-y-[6%] md:translate-y-[-10%] select-none whitespace-nowrap font-black uppercase leading-[0.85] tracking-tight text-white/[0.06]"
+            style={{ fontSize: 'clamp(60px, 24vw, 460px)' }}
           >
             Lukaz
           </span>
 
           <div className="relative grid grid-cols-2 gap-x-6 gap-y-10 pt-20 pb-10 md:pt-24 lg:grid-cols-4 lg:gap-x-10">
-            <div>
+            <div className="col-span-2 lg:col-span-1">
               <h3 className={headingClass}>Contact Us</h3>
               <ul className="space-y-3">
                 {contactLinks.map((item) => (
@@ -98,7 +98,7 @@ export default function Footer() {
                       rel="noopener noreferrer"
                       className={`flex items-center gap-3 ${linkClass}`}
                     >
-                      <span className="text-[#8DE8B8]">{item.icon}</span>
+                      <span className="shrink-0 text-[#8DE8B8]">{item.icon}</span>
                       {item.label}
                     </a>
                   </li>

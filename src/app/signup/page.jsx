@@ -82,7 +82,7 @@ export default function SignupPage() {
     <div className=" flex items-center justify-center bg-gray-100 px-4 sm:px-6 py-8 sm:py-14">
       <div className="min-h-screenbg-white rounded-xl shadow-2xl w-full max-w-4xl overflow-hidden md:grid md:grid-cols-2 border border-gray-200">
         {/* Left Column: Signup Form */}
-        <div className="p-8 lg:p-12 flex flex-col justify-center">
+        <div className="p-5 sm:p-8 lg:p-12 flex flex-col justify-center">
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Sign Up</h1>
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name */}

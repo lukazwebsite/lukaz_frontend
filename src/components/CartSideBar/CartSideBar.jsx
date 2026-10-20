@@ -82,9 +82,9 @@ export default function CartSideBar() {
                     alt=""
                     width={70}
                     height={70}
-                    className="rounded-lg object-cover"
+                    className="h-[70px] w-[70px] shrink-0 rounded-lg object-cover"
                   />
-                  <div className="flex-1 flex flex-col justify-between">
+                  <div className="min-w-0 flex-1 flex flex-col justify-between">
                     <div className="flex justify-between">
                       <div>
                         <Link
