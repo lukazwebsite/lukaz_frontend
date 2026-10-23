@@ -15,10 +15,10 @@ import { Undo2, HandCoins, ArrowRightLeft } from "lucide-react"
   }
 
   const eligibilityItems = [
-    "The item must be unused and in the same condition as received.",
-    "Refund & return policy: Offer product not available in this criteria",
-    "It must be in the original packaging with all tags intact.",
-    "Returns must be initiated within 5–10 days of delivery.",
+    "Products can be exchanged within 7 (seven) days from the purchase date.",
+    "The original cash memo/invoice must be presented at the time of exchange.",
+    "The item must be unused, unwashed, and in its original condition with tags intact.",
+    "No cash refunds will be provided; products can only be exchanged.",
     // "Certain products such as intimate wear, sale items, or personalized goods are non-returnable.",
   ]
 

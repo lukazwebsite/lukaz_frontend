@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import Provider from "@/layout/Provider";
-import { getCategories, getMenus, getSiteLogo, getTopBar } from "@/utils/actions";
+import { getCategories, getCopyright, getMenus, getSiteLogo, getTopBar } from "@/utils/actions";
 import MessengerButton from "@/components/shared/MessengerButton";
 import { GoogleTagManager } from '@next/third-parties/google';
 
@@ -52,6 +52,7 @@ export default async function RootLayout({ children }) {
   const mainMenus = await getMenus();
   const topBar = await getTopBar();
   const logo = await getSiteLogo();
+  const copyright = await getCopyright();
 
   return (
     <html className={`${dmSans.variable} ${spaceGrotesk.variable} ${outfit.variable} ${jetbrainsMono.variable}`} lang="en">
@@ -59,7 +60,7 @@ export default async function RootLayout({ children }) {
         <Provider>
           <Header mainMenus={mainMenus} categories={categories} topBar={topBar} logoUrl={logo?.logo_url} />
           {children}
-          <Footer />
+          <Footer copyright={copyright} />
         </Provider>
         <Toaster position="top-right" />
         <MessengerButton />
