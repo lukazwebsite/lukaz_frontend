@@ -12,9 +12,9 @@ import Subscription from './Subscription';
 // out, at the bottom of this file.
 
 const contactLinks = [
-  { label: 'Live Chat Concierge', href: 'https://m.me/Lukazshopp', icon: <MessageSquare size={16} /> },
-  { label: 'WhatsApp: 01752-058475', href: 'https://wa.me/8801752058475', icon: <FaWhatsapp size={16} /> },
-  { label: 'Facebook Official', href: 'https://www.facebook.com/Lukazshopp', icon: <Icon icon="mingcute:facebook-line" width="16" height="16" /> },
+  { label: 'Live Chat Concierge', href: 'https://m.me/Lukazshopbd', icon: <MessageSquare size={16} /> },
+  { label: 'WhatsApp: +880 1334945615', href: 'https://wa.me/8801334945615', icon: <FaWhatsapp size={16} /> },
+  { label: 'Facebook Official', href: 'https://www.facebook.com/Lukazshopbd', icon: <Icon icon="mingcute:facebook-line" width="16" height="16" /> },
   { label: 'support@lukazshop.com', href: 'mailto:support@lukazshop.com', icon: <Mail size={16} /> },
 ];
 
@@ -67,8 +67,37 @@ const headingClass =
   'font-label mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-[#8DE8B8]';
 const linkClass = 'text-sm text-white/90 transition hover:text-white hover:underline [overflow-wrap:anywhere]';
 
-export default function Footer() {
+// Shown when Website Config -> Copyright has no sentences
+const DEFAULT_COPYRIGHT = ['Copyright © 2025 B-Lukaz | All Rights Reserved.'];
+const MAX_COPYRIGHT = 9;
+
+// Bottom row. On a phone each sentence has its own row. From the breakpoint
+// up, the sentences share one row, one column each: the first sits on the
+// left, the last on the right, the ones between in the centre, and a lone
+// sentence in the centre. Up to 4 sentences switch at md, more at lg so the
+// columns stay wide enough. Full class names, so Tailwind can see them.
+const copyrightLayouts = {
+  md: {
+    grid: ['', '', 'md:grid-cols-2', 'md:grid-cols-3', 'md:grid-cols-4'],
+    left: 'md:text-left',
+    right: 'md:text-right',
+  },
+  lg: {
+    grid: ['', '', '', '', '', 'lg:grid-cols-5', 'lg:grid-cols-6', 'lg:grid-cols-7', 'lg:grid-cols-8', 'lg:grid-cols-9'],
+    left: 'lg:text-left',
+    right: 'lg:text-right',
+  },
+};
+
+export default function Footer({ copyright }) {
   const { setActiveSection } = useDashboard();
+
+  const sentences = (Array.isArray(copyright) ? copyright : [])
+    .filter((text) => typeof text === 'string' && text.trim() !== '')
+    .slice(0, MAX_COPYRIGHT);
+  const copyrightItems = sentences.length ? sentences : DEFAULT_COPYRIGHT;
+  const total = copyrightItems.length;
+  const layout = total <= 4 ? copyrightLayouts.md : copyrightLayouts.lg;
 
   return (
     <footer className="overflow-hidden bg-[#1D5E41] text-white">
@@ -151,13 +180,18 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="relative mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-label text-xs text-[#8DE8B8]">
-            Copyright © 2025 B-Lukaz | All Rights Reserved.
-          </p>
-          <p className="font-label text-xs text-white">
-            <span className="font-bold">LUKAZ</span> · Believe in Quality
-          </p>
+        <div className={`relative mt-10 grid gap-2 border-t border-white/10 pt-6 md:gap-x-6 ${layout.grid[total] || ''}`}>
+          {copyrightItems.map((text, i) => {
+            let align = 'text-center';
+            if (total > 1 && i === 0) align = `text-center ${layout.left}`;
+            else if (total > 1 && i === total - 1) align = `text-center ${layout.right}`;
+
+            return (
+              <p key={i} className={`font-label min-w-0 text-xs text-[#8DE8B8] [overflow-wrap:anywhere] ${align}`}>
+                {text}
+              </p>
+            );
+          })}
         </div>
       </div>
     </footer>

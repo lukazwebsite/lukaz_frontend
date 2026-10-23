@@ -17,17 +17,17 @@ export default function TermsAndConditions() {
     {
       icon: ReceiptText,
       title: "Acceptance of Terms",
-      description: "By accessing this site, you confirm that you are at least 18 years old or accessing under the supervision of a parent or legal guardian.",
+      description: "By using this site, you confirm that you are at least 18 years old or accessing it under the supervision of a parent or legal guardian.",
     },
     {
        icon: Info,
       title: "Product Information",
-      description: "We strive for accuracy in product descriptions, pricing, and availability. However, we do not guarantee that all information is free from error.",
+      description: "We aim for complete accuracy in product details, pricing, and availability. While errors are rare, LUKAZ reserves the right to correct any inadvertent inaccuracies and update information without prior notice.",
     },
     {
       icon: ShoppingCart,
       title: "Orders & Payments",
-      description: "All orders placed are subject to acceptance and product availability. Payment must be made in full before shipping.",
+      description: "All orders placed on LUKAZ are subject to product availability and order acceptance. Full payment or order verification must be completed prior to shipping.",
     },
     
   ]
@@ -102,13 +102,12 @@ export default function TermsAndConditions() {
             </h3>
               <div className="">
          <p className="text-gray-600 font-semibold leading-relaxed mb-4">
-             You agree to use this website only for lawful purposes and in a manner
-            that does not infringe the rights of others, restrict, or inhibit their use.
+             By accessing LUKAZ, you agree to browse responsibly and for lawful purposes only.
           </p>
           <ul className="list-disc list-inside mt-4 text-gray-600 space-y-1">
-            <li>No fraudulent, abusive, or unlawful activity is permitted.</li>
-            <li>Content must not violate intellectual property rights.</li>
-            <li>Attempts to disrupt or hack our systems are strictly prohibited.</li>
+            <li><span className="font-semibold">Prohibited Uses:</span> No fraudulent activity, system disruption, or hacking attempts.</li>
+            <li><span className="font-semibold">Content Rights:</span> All website assets and intellectual property are strictly protected.</li>
+            <li><span className="font-semibold">User Conduct:</span> Actions must not restrict, abuse, or inhibit others&apos; browsing experience.</li>
           </ul>
         </div>
           </motion.div>

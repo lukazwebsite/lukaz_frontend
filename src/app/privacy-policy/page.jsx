@@ -17,17 +17,23 @@ export default function PrivacyPolicy() {
       icon: Database,
       title: "Information We Collect",
       description: "We may collect information that you provide directly to us when you register, subscribe, or interact with our services. This includes:",
+      items: [
+        { emoji: "👤", label: "Personal Details:", text: "Name, Phone Number, Shipping Address" },
+        { emoji: "📧", label: "Account Credentials:", text: "Email address, Account Password" },
+        { emoji: "💳", label: "Payment Information:", text: "Payment methods, Billing details (Secured)" },
+        { emoji: "🛍️", label: "Order History:", text: "Purchased items, Preferences, Activity log" },
+      ],
     },
     {
        icon: Cookie,
       title: "Cookies",
-      description: "We use cookies and similar technologies to enhance your browsing experience, remember preferences, and analyze site traffic. You can disable cookies through your browser settings, but some features may not function properly.",
+      description: "We use cookies to enhance your shopping experience, remember your cart & settings, and analyze site traffic. You can manage cookies via browser settings anytime.",
     },
     {
         icon: Handshake,
    
       title: "Third-Party Services",
-      description: "We may share your information with trusted third-party providers who help us run our business. These partners are required to keep your data secure and only use it for authorized purposes.",
+      description: "We never sell your personal data. We only share necessary information with trusted service partners—such as payment gateways and delivery networks—to process your orders safely and efficiently.",
     },
   ]
 
@@ -119,11 +125,11 @@ export default function PrivacyPolicy() {
          <p className="text-gray-600 font-semibold leading-relaxed mb-4">
             Your information is used to:
           </p>
-          <ul className="list-disc list-inside mt-4 text-gray-600 space-y-1">
-    <li>Provide, operate, and improve our services.</li>
-            <li>Process secure transactions.</li>
-            <li>Send service-related updates and promotions.</li>
-            <li>Ensure website security and prevent fraud.</li>
+          <ul className="list-none mt-4 text-gray-600 space-y-2">
+            <li>⚙️ <span className="font-semibold">Provide &amp; Improve:</span> Provide, operate, and improve our services.</li>
+            <li>💳 <span className="font-semibold">Secure Transactions:</span> Process safe and encrypted payments.</li>
+            <li>🔔 <span className="font-semibold">Updates &amp; Offers:</span> Send service updates and promotional news.</li>
+            <li>🛡️ <span className="font-semibold">Fraud Prevention:</span> Ensure website security and prevent fraud.</li>
           </ul>
         </div>
           </motion.div>
@@ -152,6 +158,15 @@ export default function PrivacyPolicy() {
                 </div>
                 <h4 className="text-xl font-semibold text-gray-900 mb-3">{value.title}</h4>
                 <p className="text-gray-700 leading-relaxed">{value.description}</p>
+                {value.items && (
+                  <ul className="list-none mt-3 w-full text-left text-gray-700 leading-relaxed space-y-2">
+                    {value.items.map((item) => (
+                      <li key={item.label}>
+                        {item.emoji} <span className="font-semibold">{item.label}</span> {item.text}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </motion.div>
             ))}
           </motion.div>

@@ -464,6 +464,29 @@ export async function getTopBar() {
 }
 
 
+// Sentences for the bottom row of the footer, in order from left to right
+export async function getCopyright() {
+  const API_URL = `${baseUrl}/api/copyright`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: REVALIDATE },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch copyright: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    return Array.isArray(json) ? json : [];
+  } catch (error) {
+    console.error("Error fetching copyright:", error);
+    return [];
+  }
+}
+
+
 export async function getRibbons() {
   const API_URL = `${baseUrl}/api/ribbons`;
 

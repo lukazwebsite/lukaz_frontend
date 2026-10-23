@@ -17,22 +17,22 @@ export default function AboutUsPage() {
     {
       icon: Leaf,
       title: "Sustainable Craft",
-      description: "Our commitment to eco-conscious materials and ethical production.",
+      description: "We believe in building lasting relationships with our artisans and suppliers, ensuring every product is crafted with care and integrity.",
     },
     {
       icon: Handshake,
       title: "Transparent Process",
-      description: "Building trust through open communication and honest practices.",
+      description: "Founded on the principle that true elegance lies in simplicity, creating pieces that go beyond mere beauty.",
     },
     {
       icon: Lightbulb,
       title: "Innovative Design",
-      description: "Pushing boundaries to create functional and aesthetically pleasing products.",
+      description: "Every piece tells a story of dedication—from the initial sketch to the final touch.",
     },
      {
       icon: Truck,
-      title: "Delivery Time",
-      description: " Our Delevery Time is- Inside Dhaka 5 days, Outside Dhaka 10 days.",
+      title: "Fast & Reliable",
+      description: "Our Delivery Time is - Inside Dhaka 1-2 days, Outside Dhaka 2-4 days.",
     },
   ]
 
@@ -109,8 +109,11 @@ const products = [
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 ">
             About Us
           </h2>
+           {/* <p className="text-xl xl:text-[21px] text-gray-100 max-w-2xl mx-auto leading-relaxed">
+            Our business name is lukaz, Trade license Number is- 1230048190
+          </p> */}
            <p className="text-xl xl:text-[21px] text-gray-100 max-w-2xl mx-auto leading-relaxed">
-            Our business name is lukaz, Trade license Number is- 1230048190 
+            Our business name is LUKAZ, BIN Number is : 007010016-0111
           </p>
           
           {/* <p className="text-xl text-gray-100 max-w-2xl mx-auto leading-relaxed">
@@ -141,16 +144,13 @@ const products = [
           </motion.div>
           <motion.div variants={fadeInVariants}>
              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#3A9E75] mb-2 leading-tight">
-             The Journey of Lukaz
+             The Journey of LUKAZ
             </h3>
-            <p className="text-md text-gray-700 mb-6 leading-relaxed">
-              Founded on the principle that true elegance lies in simplicity, MINIMAL began with a vision to create
-              products that are not just beautiful.
-            </p>
             <p className="text-md text-gray-700 leading-relaxed">
-              Every piece in our collection tells a story of dedication – from the initial sketch to the final touch. We
-              believe in building lasting relationships with our artisans and suppliers, ensuring every product you
-              receive is crafted with care and integrity.
+              Lukaz was born from a simple belief: true style is effortless. From the first sketch to the final
+              touch, every piece we create tells a story of dedication. By partnering closely with skilled
+              artisans who share our values, we ensure every item is crafted with genuine care, integrity, and
+              timeless appeal.
             </p>
           </motion.div>
         </div>
