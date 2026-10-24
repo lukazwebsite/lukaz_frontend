@@ -61,7 +61,9 @@ const FilmSection = ({ uploaded, video }) => {
           </div>
         </div>
 
-        <div className="relative w-full aspect-[4/5] sm:aspect-[4/3] lg:aspect-video overflow-hidden rounded-2xl sm:rounded-[28px] bg-black">
+        {/* <div className="relative w-full aspect-[4/5] sm:aspect-[4/3] lg:aspect-video overflow-hidden rounded-2xl sm:rounded-[28px] bg-black"> */}
+        {/* 16:9 at every width: a taller box cut off both sides of the footage on phones */}
+        <div className="relative w-full aspect-video overflow-hidden rounded-2xl sm:rounded-[28px] bg-black">
           {hasUploaded ? (
             <AutoPlayVideo
               src={uploaded.video_url}
