@@ -79,7 +79,12 @@ export default function HeroVideo({ uploaded, video, heroTitle }) {
 
   return (
     <section className="relative w-full overflow-hidden bg-black">
-      <div className="relative w-full h-[72svh] min-h-[460px] max-h-[860px]">
+      {/* <div className="relative w-full h-[72svh] min-h-[460px] max-h-[860px]"> */}
+      {/* Below lg the box is narrower than the 16:9 footage, so filling it cut off
+          both sides. There the video keeps its own shape and the text sits under it;
+          from lg the video fills a tall box with the text over it. */}
+      <div className="relative w-full lg:h-[72svh] lg:min-h-[460px] lg:max-h-[860px]">
+        <div className="relative w-full aspect-video lg:absolute lg:inset-0 lg:aspect-auto lg:h-full">
         {!hasMedia ? null : hasUploaded ? (
           <video
             ref={videoRef}
@@ -93,7 +98,7 @@ export default function HeroVideo({ uploaded, video, heroTitle }) {
           />
         ) : (
           <iframe
-            className="absolute inset-0 h-full w-full pointer-events-none scale-[1.35]"
+            className="absolute inset-0 h-full w-full pointer-events-none lg:scale-[1.35]"
             src={`https://www.youtube.com/embed/${video?.video_link}?autoplay=1&mute=1&controls=0&showinfo=0&loop=1&rel=0&modestbranding=1&playlist=${video?.video_link}`}
             title="Lukaz film"
             allow="autoplay; encrypted-media; picture-in-picture"
@@ -102,8 +107,10 @@ export default function HeroVideo({ uploaded, video, heroTitle }) {
 
         {/* Dark gradient so white text stays readable on any footage */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/10 pointer-events-none" />
+        </div>
 
-        <div className="absolute inset-0 flex flex-col justify-end px-4 pb-8 sm:px-10 sm:pb-14 lg:px-[9%]">
+        {/* <div className="absolute inset-0 flex flex-col justify-end px-4 pb-8 sm:px-10 sm:pb-14 lg:px-[9%]"> */}
+        <div className="relative flex flex-col justify-end px-4 pt-6 pb-8 sm:px-10 sm:pb-10 lg:absolute lg:inset-0 lg:pt-0 lg:pb-14 lg:px-[9%]">
           {/* <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"> */}
           {/* Controls sit under the title until the screen is wide enough to fit both on one row */}
           {/* <div className="flex flex-col gap-6 2xl:flex-row 2xl:items-end 2xl:justify-between"> */}

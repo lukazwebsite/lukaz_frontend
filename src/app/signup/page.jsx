@@ -63,13 +63,16 @@ export default function SignupPage() {
       console.log("registerd user after dispatch:", user)
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      setLoading(false);
+      // Keep the spinner on until /dashboard loads
       router.push("/dashboard")
     } catch (err) {
+      const raw = err?.response?.data?.message
+      // Validation errors come back as { field: [messages] }
       const message =
-      err?.response?.data?.message || "Something went wrong. Please try again.";
+        raw && typeof raw === "object"
+          ? Object.values(raw).flat().join(" ")
+          : raw || "Something went wrong. Please try again."
       setError(message);
-    } finally {
       setLoading(false);
     }
 

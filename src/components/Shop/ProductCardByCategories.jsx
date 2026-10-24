@@ -78,7 +78,7 @@ export default function ProductCardByCategories({ product, productFullData, grid
   return (
     <div
       onMouseEnter={() => setHovered(true)}
-      className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-gray-100 cursor-pointer"
+      className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 hover:bg-gray-100 cursor-pointer"
     >
       {/* Image */}
       <div className="relative w-full aspect-[4/5] overflow-hidden">

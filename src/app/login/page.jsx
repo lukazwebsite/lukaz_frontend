@@ -46,13 +46,12 @@ export default function LoginPage() {
       // console.log("loggedin user:", user)
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      // setLoading(false);
+      // Keep the spinner on until /dashboard loads
       router.push("/dashboard")
     } catch (err) {
       const message =
         err?.response?.data?.message || "Login failed. Please try again.";
       setError(message);
-    } finally {
       setLoading(false);
     }
 
