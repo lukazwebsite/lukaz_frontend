@@ -73,6 +73,29 @@ export async function getProducts() {
   }
 }
 
+// Products for the home page international section, same list the
+// /international-shop page loads.
+export async function getInternationalProducts(perPage = 20) {
+  const API_URL = `${baseUrl}/api/products?international=1&latest=1&page=1&per_page=${perPage}`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: REVALIDATE },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch international products: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    return json?.data?.data || [];
+  } catch (error) {
+    console.error("Error fetching international products:", error);
+    return [];
+  }
+}
+
 export async function getSingleOrder(id) {
   const API_URL = `${baseUrl}/api/order/${id}`;
 
@@ -527,6 +550,27 @@ export async function getTeamMembers() {
     return json || [];
   } catch (error) {
     console.error("Error fetching team members:", error);
+    return [];
+  }
+}
+
+export async function getGallery() {
+  const API_URL = `${baseUrl}/api/gallery`;
+
+  try {
+    const res = await fetch(API_URL, {
+      next: { revalidate: REVALIDATE },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch gallery: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    return json || [];
+  } catch (error) {
+    console.error("Error fetching gallery:", error);
     return [];
   }
 }

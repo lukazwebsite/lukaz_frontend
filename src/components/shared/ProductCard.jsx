@@ -48,15 +48,15 @@ export default function ProductCard({ product }) {
         )} */}
         <button
           onClick={() => handleWishList(product)}
-          className="absolute top-4 right-4 bg-white p-2 rounded-full 
+          className="absolute top-4 right-4 bg-white p-1.5 rounded-full 
                              shadow-sm hover:scale-105 transition-transform focus:outline-none
                               focus:ring-2 focus:ring-gray-300 cursor-pointer"
           aria-label="Add to wishlist"
         >
           {isInWishlist(product?.slug) ? (
-            <Heart fill="red" stroke="red" />
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="red" stroke="red" />
           ) : (
-            <Heart />
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           )}
 
         

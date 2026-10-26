@@ -31,20 +31,20 @@ const FilmSection = ({ uploaded, video }) => {
   const showButton = hasUploaded && content.button_text && content.button_link;
 
   return (
-    <section className="w-full bg-[#0b0b0f] py-14 md:py-20">
+    <section className="w-full bg-[#0b0b0f] py-8 md:py-12">
       <div className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-10">
-        <div className="mb-8 flex flex-col gap-6 md:mb-10 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-6 flex flex-col gap-6 md:mb-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
-            <p className="font-label mb-4 flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-[#3DDC84]">
+            {/* <p className="font-label mb-4 flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-[#3DDC84]">
               <Clapperboard size={16} aria-hidden="true" />
               {content.eyebrow}
-            </p>
+            </p> */}
             <h2 className="section-title font-heading text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight leading-none text-white">
               {content.title}
             </h2>
-            <p className="mt-5 max-w-2xl text-sm sm:text-base text-gray-300">
+            {/* <p className="mt-5 max-w-2xl text-sm sm:text-base text-gray-300">
               {content.description}
-            </p>
+            </p> */}
             {showButton && (
               <Link
                 href={content.button_link}

@@ -75,15 +75,15 @@ export const RelatedProductCard = ({ product }) => {
         
         <button
           onClick={() => handleWishList(product)}
-          className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white p-1.5 sm:p-2 rounded-full 
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white p-1 sm:p-1.5 rounded-full 
                                         shadow-sm hover:scale-105 transition-transform focus:outline-none
                                         focus:ring-2 focus:ring-green-300 cursor-pointer"
           aria-label="Add to wishlist"
         >
           {isInWishlist(product?.slug) ? (
-            <Heart fill="red" stroke="red" />
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="red" stroke="red" />
           ) : (
-            <Heart />
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           )}
 
           {/* <Heart className="w-5 h-5 text-gray-700" /> */}

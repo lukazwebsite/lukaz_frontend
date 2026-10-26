@@ -101,7 +101,7 @@ export default function Footer({ copyright }) {
 
   return (
     <footer className="overflow-hidden bg-[#1D5E41] text-white">
-      <div className="mx-auto max-w-[1640px] px-3 pt-12 pb-8 sm:px-4 md:px-10">
+      <div className="mx-auto max-w-[1640px] px-3 pt-8 md:pt-10 pb-6 sm:px-4 md:px-10">
         {/* Newsletter */}
         <Subscription />
 
@@ -115,7 +115,7 @@ export default function Footer({ copyright }) {
             Lukaz
           </span>
 
-          <div className="relative grid grid-cols-2 gap-x-6 gap-y-10 pt-20 pb-10 md:pt-24 lg:grid-cols-4 lg:gap-x-10">
+          <div className="relative grid grid-cols-2 gap-x-6 gap-y-8 pt-12 pb-8 md:pt-16 lg:grid-cols-4 lg:gap-x-10">
             <div className="col-span-2 lg:col-span-1">
               <h3 className={headingClass}>Contact Us</h3>
               <ul className="space-y-3">
@@ -180,7 +180,7 @@ export default function Footer({ copyright }) {
         </div>
 
         {/* Copyright */}
-        <div className={`relative mt-10 grid gap-2 border-t border-white/10 pt-6 md:gap-x-6 ${layout.grid[total] || ''}`}>
+        <div className={`relative mt-6 grid gap-2 border-t border-white/10 pt-6 md:gap-x-6 ${layout.grid[total] || ''}`}>
           {copyrightItems.map((text, i) => {
             let align = 'text-center';
             if (total > 1 && i === 0) align = `text-center ${layout.left}`;

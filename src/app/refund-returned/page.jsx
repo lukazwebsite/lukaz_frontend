@@ -149,7 +149,7 @@ export default function ReturnPolicy() {
           variants={fadeInVariants}
           className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 text-center"
         >
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 sm:mb-12">
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">
             Our Return & Refund Policy
           </h3>
 

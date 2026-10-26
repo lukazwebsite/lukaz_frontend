@@ -55,7 +55,7 @@ export default function ProductSlider() {
   }, [activeTab]);
 
   return (
-    <div className=" py-6 md:py-10 relative">
+    <div className="py-6 md:py-8 relative">
 
       {/* <div className="flex justify-between items-center mb-6">
         <div className='flex flex-col gap-4 sm:flex-row sm:items-end'>
@@ -97,20 +97,21 @@ export default function ProductSlider() {
         </div>
       </div> */}
 
-      <div className="mb-8 md:mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <div className="mb-6 md:mb-8 flex flex-col items-center text-center">
         <div className="min-w-0">
-          <p className="font-label text-[11px] sm:text-xs font-semibold uppercase tracking-[0.35em] text-[#237A52] mb-3">
+          {/* <p className="font-label text-[11px] sm:text-xs font-semibold uppercase tracking-[0.35em] text-[#237A52] mb-3">
             Discover Lukaz
-          </p>
+          </p> */}
           <h2 className="section-title font-heading text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight leading-none text-[#09090C]">
-            The Lukaz Edit
+            {/* The Lukaz Edit */}
+            New and Best Sales
           </h2>
-          <p className="mt-3 text-base md:text-lg text-gray-600">
+          {/* <p className="mt-3 text-base md:text-lg text-gray-600">
             Curated styles. Everyday confidence.
-          </p>
+          </p> */}
         </div>
 
-        <div className="flex items-center justify-between gap-3 sm:gap-4">
+        {/* <div className="flex items-center justify-between gap-3 sm:gap-4">
           <div className="min-w-0 overflow-x-auto no-scrollbar rounded-full bg-[#F1F1F3] p-1.5">
             <div className="flex w-max text-xs sm:text-sm font-medium">
               {tabs.map((tab) => (
@@ -146,12 +147,26 @@ export default function ProductSlider() {
               <ChevronRight size={20} />
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <Swiper
         slidesPerView={1.2}
         spaceBetween={16}
+
+        // slower, eased slide change instead of the default 300ms jump
+        speed={900}
+        style={{ '--swiper-wrapper-transition-timing-function': 'cubic-bezier(0.25, 0.8, 0.25, 1)' }}
+
+        // mouse drag: grab any card and pull left/right; small threshold keeps plain clicks opening the product
+        simulateTouch
+        grabCursor
+        threshold={5}
+        followFinger
+        resistanceRatio={0.6}
+
+        // loop only when there are enough slides to fill both sides, otherwise Swiper warns and rewinds
+        loop={(productsData?.data?.length || 0) > 9}
 
         navigation={{
           nextEl: '.swiper-button-next-custom',
@@ -159,7 +174,7 @@ export default function ProductSlider() {
         }}
 
         autoplay={{
-          delay: 2000,
+          delay: 2500,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}

@@ -232,12 +232,20 @@ body {
   animation: ribbonScroll linear infinite;
 }
 
-.ribbon-marquee:hover .ribbon-marquee-track {
+/* Top bar uses the same loop played backwards, so it moves the opposite way
+   to the ribbon. */
+.top-bar-marquee-track {
+  animation: ribbonScroll linear infinite reverse;
+}
+
+.ribbon-marquee:hover .ribbon-marquee-track,
+.top-bar-marquee:hover .top-bar-marquee-track {
   animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ribbon-marquee-track {
+  .ribbon-marquee-track,
+  .top-bar-marquee-track {
     animation: none;
   }
 }

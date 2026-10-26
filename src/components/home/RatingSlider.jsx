@@ -128,9 +128,10 @@ const ReviewCard = ({ review }) => (
 
 export default function RatingSlider({reviews}) {
   return (
-    <div className="pt-6 md:pt-8 px-6 pb-6 bg-gray-50">
-      {/* Main Slider */}
-      <div className="relative mb-8">
+    <div className="pt-4 md:pt-5 pb-8 bg-gray-50">
+      {/* Main Slider (hidden when there are no reviews so it doesn't leave an empty gap) */}
+      {reviews?.reviews?.length > 0 && (
+      <div className="relative mb-6">
         <Swiper
           modules={[Navigation]}
           spaceBetween={16}
@@ -178,35 +179,43 @@ export default function RatingSlider({reviews}) {
           </svg>
         </button>
       </div>
+      )}
 
       {/* Rating Summary */}
-      <div className=" flex flex-col justify-center items-center gap-2 text-center mb-6">
-        <p className="text-gray-700 text-sm">
-          Rated <span className="font-semibold">{reviews?.avarage ? <span>{parseFloat(reviews?.avarage).toFixed(1) }</span>:"0"} </span> / 5 based on <span className="font-semibold">{reviews?.all_rattings}</span>{" "}
-          reviews. Showing our 5 star reviews.
-        </p>
-        <div className="mt-2">
-          {/* <TrustpilotLogo /> */}
-          
-        </div>
-      </div>
-
-      {/* Bottom Trustpilot Banner */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-2.5 md:gap-4">
-          <span className="text-lg font-semibold text-gray-900">Excellent</span>
-          <div className="flex gap-1">
-            {[...Array(5)].map((_, i) => (
-              <StarIcon key={i} />
-            ))}
+      {(() => {
+        // Hardcoded until the review API numbers are verified.
+        const avg = "5.0"
+        return (
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 px-6 py-5 md:px-8 md:py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex flex-col items-center text-center md:items-start md:text-left gap-2">
+              <div className="flex items-center justify-center gap-3">
+                <div className="flex gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <StarIcon key={i} />
+                  ))}
+                </div>
+                <span className="font-label text-sm font-semibold text-[#09090C]">{avg} / 5.0</span>
+              </div>
+              <p className="font-label text-xs text-gray-500">
+                Rated {avg} / 5 based on verified reviews · Showing our 5 star reviews.
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-sm font-bold text-green-700">Excellent</span>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="flex h-5 w-5 items-center justify-center bg-[#00B67A]">
+                    <svg className="h-3.5 w-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 1.5l2.6 5.9 6.4.6-4.8 4.2 1.4 6.3L10 15.3 4.4 18.5l1.4-6.3L1 8l6.4-.6L10 1.5z" />
+                    </svg>
+                  </span>
+                ))}
+              </div>
+              <span className="font-label text-xs text-gray-500">Verified Lukaz Buyers</span>
+            </div>
           </div>
-          <span className="text-gray-700">{reviews?.all_rattings} reviews on all products</span>
-          <div className="flex items-center gap-1">
-            {/* <StarIcon /> */}
-            {/* <span className="font-semibold text-gray-900">Trustpilot</span> */}
-          </div>
-        </div>
-      </div>
+        )
+      })()}
     </div>
   )
 }

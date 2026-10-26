@@ -47,7 +47,9 @@ function StockBadge({ item }) {
   );
 }
 
-export default function HomeProductCard({ item }) {
+// `href` overrides the link, e.g. the home international section sends cards to
+// /international-product/[slug].
+export default function HomeProductCard({ item, href }) {
   const path = item?.color_thumbnails;
 
   const chain = [
@@ -81,10 +83,13 @@ export default function HomeProductCard({ item }) {
 
   return (
     <Link
-      href={`/product/${item?.slug}`}
+      href={href || `/product/${item?.slug}`}
       prefetch={false}
       onMouseEnter={() => setHovered(true)}
-      className="group mx-auto block cursor-pointer overflow-hidden rounded-2xl border border-gray-200 bg-white transition hover:shadow-lg"
+      // native link/image drag would hijack the slider's mouse drag
+      draggable={false}
+      onDragStart={(e) => e.preventDefault()}
+      className="group mx-auto block select-none overflow-hidden rounded-2xl border border-gray-200 bg-white transition hover:shadow-lg"
     >
       {/* Image Container */}
       <div className="relative w-full aspect-4/5 overflow-hidden bg-gray-100">
@@ -94,6 +99,7 @@ export default function HomeProductCard({ item }) {
           fill
           sizes="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 25vw"
           className="object-cover"
+          draggable={false}
           priority={false}
           onError={() =>
             setStep((prev) => (prev < chain.length - 1 ? prev + 1 : prev))
@@ -107,6 +113,7 @@ export default function HomeProductCard({ item }) {
             fill
             sizes="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 25vw"
             className="object-cover translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"
+            draggable={false}
             priority={false}
             onError={() => setHoverFailed(true)}
           />

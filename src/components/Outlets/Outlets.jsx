@@ -188,7 +188,7 @@ export default function Outlets({ outlets }) {
         <span className="pb-1">Our</span> Outlets
       </motion.h1>
 
-      <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12">
+      <p className="text-center text-gray-600 max-w-2xl mx-auto mb-8">
         Visit any of our outlets across the country to experience our world-class service and premium collections.
       </p>
 
