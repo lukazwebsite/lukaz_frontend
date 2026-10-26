@@ -124,7 +124,7 @@ export default function InternationalSection({ products = [] }) {
                 </p>
               </div>
               <a
-                href="https://wa.me/8801334945615"
+                href="https://wa.me/8801752058475"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-label flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-[11px] font-semibold text-gray-200 transition hover:bg-white/10"
