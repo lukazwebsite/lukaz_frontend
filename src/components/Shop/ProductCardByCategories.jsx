@@ -3,6 +3,7 @@
 import { useContext, useEffect, useState } from "react";
 import { WishListContext } from "@/context/WishListContext";
 import { getImageUrl, getFallbackImageUrl, PLACEHOLDER_IMAGE } from "@/utils/helpers";
+import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -38,7 +39,10 @@ export default function ProductCardByCategories({ product, productFullData, grid
   // ── Hover image ───────────────────────────────────────────────────────────
   const hoverPath = firstGalleryImage(productFullData?.color_galleries);
   const [hoverFailed, setHoverFailed] = useState(false);
-  useEffect(() => { setHoverFailed(false); }, [hoverPath]);
+  // True once the hover image has loaded. Until then the main image does not
+  // blur, so a missing or slow second image never leaves a blurred card.
+  const [hoverReady, setHoverReady] = useState(false);
+  useEffect(() => { setHoverFailed(false); setHoverReady(false); }, [hoverPath]);
 
   // Mounted only after the first hover, so a card costs one billed image
   // instead of two. Touch screens never hover and never load it.
@@ -78,7 +82,7 @@ export default function ProductCardByCategories({ product, productFullData, grid
   return (
     <div
       onMouseEnter={() => setHovered(true)}
-      className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 hover:bg-gray-100 cursor-pointer"
+      className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 cursor-pointer"
     >
       {/* Image */}
       <div className="relative w-full aspect-[4/5] overflow-hidden">
@@ -89,20 +93,25 @@ export default function ProductCardByCategories({ product, productFullData, grid
             alt={product?.name || "Product image"}
             fill
             sizes={imageSizes}
-            className="object-cover rounded-t-sm"
+            className={`object-cover rounded-t-sm transition duration-700 ease-in-out ${
+              showHoverImage && hoverReady ? "group-hover:blur-md group-hover:scale-105" : ""
+            }`}
             onError={() =>
               setStep((prev) => (prev < chain.length - 1 ? prev + 1 : prev))
             }
           />
 
-          {/* Hover image — slides up from bottom */}
+          {/* Hover image — fades in once the main image has blurred (0.7s) */}
           {showHoverImage && (
             <Image
               src={getImageUrl("products", hoverPath)}
               alt={product?.name || "Product image"}
               fill
               sizes={imageSizes}
-              className="object-cover rounded-t-sm translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"
+              className={`object-cover rounded-t-sm opacity-0 transition-opacity duration-500 ease-in-out ${
+                hoverReady ? "group-hover:opacity-100 group-hover:delay-700" : ""
+              }`}
+              onLoad={() => setHoverReady(true)}
               onError={() => setHoverFailed(true)}
             />
           )}
@@ -119,6 +128,20 @@ export default function ProductCardByCategories({ product, productFullData, grid
             -{product.discount}
           </span>
         )}
+
+        {/* Wishlist */}
+        <button
+          type="button"
+          onClick={handleWishList}
+          className="absolute top-4 right-2 sm:right-4 bg-white p-1 sm:p-1.5 rounded-full shadow-sm hover:scale-105 transition-transform focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer"
+          aria-label={isInWishlist(productFullData?.slug) ? "Remove from wishlist" : "Add to wishlist"}
+        >
+          {isInWishlist(productFullData?.slug) ? (
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="red" stroke="red" />
+          ) : (
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          )}
+        </button>
       </div>
 
       {/* Info */}

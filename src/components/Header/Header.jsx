@@ -69,7 +69,7 @@ export default function Header({ mainMenus, categories, topBar, logoUrl }) {
       {/* Main Header */}
       <header ref={headerRef} className="bg-white text-[#09090C] border-b border-gray-200 relative">
         <div className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-10">
-          <div className="grid h-14 md:h-16 grid-cols-[minmax(0,1fr)_auto] md:grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4">
+          <div className="grid h-14 md:h-16 grid-cols-[minmax(0,1fr)_auto] md:grid-cols-[auto_1fr_auto] items-center gap-2 sm:gap-4">
             {/* Menu toggle + logo */}
             <div className="flex min-w-0 items-center gap-2 sm:gap-6">
               <button
@@ -87,9 +87,6 @@ export default function Header({ mainMenus, categories, topBar, logoUrl }) {
                     <span className="h-0.5 w-full bg-current" />
                   </span>
                 )}
-                <span className="font-label hidden sm:inline text-[10px] font-semibold uppercase tracking-wider text-gray-500">
-                  Menu
-                </span>
               </button>
 
               {/* Uploaded logo from Website Config -> Logo, else the text logo */}
@@ -111,7 +108,7 @@ export default function Header({ mainMenus, categories, topBar, logoUrl }) {
             </div>
 
             {/* Primary nav (desktop only), always visible */}
-            <nav className="hidden md:flex items-center gap-8">
+            <nav className="hidden md:grid grid-cols-3 min-w-0 border border-gray-300 divide-x divide-gray-300">
               {menuItems.map((item) => {
                 const itemLastPath = item.href.split("/").filter(Boolean).pop()
                 const isActive = lastPath === itemLastPath
@@ -120,7 +117,7 @@ export default function Header({ mainMenus, categories, topBar, logoUrl }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`text-sm font-medium transition-colors hover:text-[#237A52] ${
+                    className={`flex h-11 items-center justify-center text-sm font-medium transition-colors hover:text-[#237A52] ${
                       isActive ? "text-[#237A52] font-semibold" : "text-[#09090C]"
                     }`}
                   >
@@ -132,9 +129,9 @@ export default function Header({ mainMenus, categories, topBar, logoUrl }) {
 
             {/* Icons */}
             <div className="col-start-2 md:col-start-3 flex items-center justify-end sm:gap-1">
-              {/* Desktop search (with category dropdown): fills the free space left of the icons, nav stays put */}
+              {/* Desktop search (with category dropdown): sits left of the icons, nav boxes shrink to make room */}
               {isSearchOpen && (
-                <div className="hidden lg:block flex-1 min-w-0 max-w-[420px] mr-3">
+                <div className="hidden lg:block w-[320px] xl:w-[420px] mr-3">
                   <SeachBarwithDropDown
                     autoFocus
                     onClose={() => setIsSearchOpen(false)}

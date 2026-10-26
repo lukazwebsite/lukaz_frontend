@@ -216,7 +216,7 @@ export default function TeamSlider({ members }) {
   if (!list.length) return null
 
   return (
-    <div className="pt-10 md:pt-14 pb-8">
+    <div className="pt-8 md:pt-12 pb-4">
       <SectionHeading
         eyebrow="Our People"
         title="The People Behind LUKAZ"

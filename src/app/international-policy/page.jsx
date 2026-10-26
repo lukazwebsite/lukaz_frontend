@@ -111,7 +111,7 @@ export default function InternationalOrderPolicy() {
         className="py-8 sm:py-12 bg-[#E6F4EF]"
       >
         <motion.div variants={fadeInVariants} className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 text-center">
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 sm:mb-12">International Order Terms</h3>
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">International Order Terms</h3>
           <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             {policies.map((value, index) => (
               <motion.div

@@ -165,7 +165,7 @@ const products = [
         className="py-8 sm:py-12  bg-[#E6F4EF]"
       >
         <motion.div variants={fadeInVariants} className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 text-center">
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 sm:mb-12">Our Qualities </h3>
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">Our Qualities </h3>
           <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {values.map((value, index) => (
               <motion.div
@@ -243,10 +243,10 @@ const products = [
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={staggerContainer}
-        className="py-12 sm:py-20 px-6 lg:px-8 bg-[#E6F4EF]"
+        className="py-8 sm:py-12 px-6 lg:px-8 bg-[#E6F4EF]"
       >
         <motion.div variants={fadeInVariants} className="max-w-7xl mx-auto text-center">
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 sm:mb-12">Meet the Minds Behind Minimal</h3>
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">Meet the Minds Behind Minimal</h3>
           <motion.div variants={staggerContainer} className="flex flex-wrap items-center justify-center gap-10 sm:gap-20">
             {teamMembers.map((member, index) => (
               <motion.div key={index} variants={fadeInVariants} className="flex flex-col items-center text-center">
@@ -274,11 +274,11 @@ const products = [
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={fadeInVariants}
-        className="py-12 sm:py-20 px-6 lg:px-8 bg-[#3A9E75] text-white"
+        className="py-8 sm:py-12 px-6 lg:px-8 bg-[#3A9E75] text-white"
       >
         <div className="max-w-4xl mx-auto text-center">
           <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6">Experience Minimal</h3>
-          <p className="text-lg text-gray-100 mb-12">
+          <p className="text-lg text-gray-100 mb-8">
             Discover our thoughtfully designed collection and bring simplicity into your life.
           </p>
           <a

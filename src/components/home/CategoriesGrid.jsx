@@ -58,15 +58,15 @@ export default function CategoriesGrid({ categoryTree = [] }) {
   const goToLevel = (index) => setTrail(prev => prev.slice(0, index + 1))
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-20 bg-[#EAF4EF]">
+    <section ref={sectionRef} className="pt-4 md:pt-6 pb-8 md:pb-12 bg-[#EAF4EF]">
       {/* ── Heading ── */}
       <div className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16">
-        <div className="flex justify-center mb-4">
+        {/* <div className="flex justify-center mb-4">
           <span className="font-label inline-flex items-center gap-2 rounded-full border border-[#237A52]/20 bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#237A52]">
             <Sparkles size={12} />
             {items.length} {current ? 'collections' : 'curated categories'}
           </span>
-        </div>
+        </div> */}
         <SectionHeading
           align="center"
           title={current ? current.name : 'Shop by Category'}

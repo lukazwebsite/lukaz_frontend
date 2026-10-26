@@ -7,9 +7,9 @@ import Link from "next/link";
 
 export default function Brands({ brands }) {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
       {/* Title Section */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
           <span className="relative inline-block">
             <span className="absolute -bottom-1 left-0 w-full h-2 bg-[#3A9E75] rounded-md opacity-40"></span>

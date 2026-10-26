@@ -8,11 +8,13 @@ import ShopByBrandsSlider from "@/components/home/ShopByBrandsSlider";
 import VideoSection from "@/components/home/VideoSection";
 import Container from "@/components/shared/Container";
 // import { getBrands, getCategories, getFeaturedMenus, getMenus, getProductByCategory, getProducts, getReviews, getTeamMembers, getVideos } from "@/utils/actions";
-import { getBrands, getCategories, getFeaturedMenus, getHeroTitle, getMenus, getProductByCategory, getProducts, getReviews, getRibbons, getSiteVideos, getTeamMembers, getVideos } from "@/utils/actions";
-import TeamSlider from "@/components/home/TeamSlider";
+import { getBrands, getCategories, getFeaturedMenus, getGallery, getHeroTitle, getInternationalProducts, getMenus, getProductByCategory, getProducts, getReviews, getRibbons, getSiteVideos, getTeamMembers, getVideos } from "@/utils/actions";
+// import TeamSlider from "@/components/home/TeamSlider";
+import GallerySlider from "@/components/home/GallerySlider";
 import RibbonMarquee from "@/components/home/RibbonMarquee";
 import HeroVideo from "@/components/home/HeroVideo";
 import FilmSection from "@/components/home/FilmSection";
+import InternationalSection from "@/components/home/InternationalSection";
 import FeatureItems from "@/components/home/FeatureItems";
 import WelcomeSection from "@/components/home/WelcomeSection";
 import AccessoriesSlider from "@/components/home/AccessoriesSlider";
@@ -33,8 +35,10 @@ export default async function Home() {
   const siteVideos = await getSiteVideos();
   const heroTitle = await getHeroTitle();
   const ribbons = await getRibbons();
-  const teamMembers = await getTeamMembers();
+  // const teamMembers = await getTeamMembers();
+  const galleryImages = await getGallery();
   const categoryTree = await getFeaturedMenus();
+  const internationalProducts = await getInternationalProducts();
 
   // const reviews=await getReviews();
 
@@ -77,11 +81,13 @@ export default async function Home() {
 
       {/* <VideoSection video={videos[1]} /> */}
       {/* <VideoSection video={videos[1]} uploaded={siteVideos?.bottom} /> */}
+      <InternationalSection products={internationalProducts} />
       <FilmSection video={videos[1]} uploaded={siteVideos?.bottom} />
 
 
       <Container>
-        <TeamSlider members={teamMembers} />
+        {/* <TeamSlider members={teamMembers} /> */}
+        <GallerySlider images={galleryImages} />
       </Container>
 
       <OutletsSection/>

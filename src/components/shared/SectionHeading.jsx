@@ -18,9 +18,9 @@ export default function SectionHeading({
 
   return (
     <div
-      className={`flex gap-4 mb-8 md:mb-10 ${
+      className={`flex gap-4 mb-6 md:mb-8 ${
         centered
-          ? "flex-col items-center text-center"
+          ? "relative flex-col items-center text-center"
           : "flex-col sm:flex-row sm:items-end sm:justify-between"
       } ${className}`}
     >
@@ -39,7 +39,11 @@ export default function SectionHeading({
           <p className="mt-3 max-w-xl text-sm md:text-base text-gray-600">{subtitle}</p>
         )}
       </div>
-      {action && <div className="shrink-0">{action}</div>}
+      {action && (
+        <div className={`shrink-0 ${centered ? "sm:absolute sm:right-0 sm:bottom-0" : ""}`}>
+          {action}
+        </div>
+      )}
     </div>
   );
 }

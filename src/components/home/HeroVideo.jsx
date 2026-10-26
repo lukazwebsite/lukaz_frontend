@@ -40,8 +40,28 @@ export default function HeroVideo({ uploaded, video, heroTitle }) {
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
-    el.muted = true;
-    el.play().catch(() => setPlaying(false));
+    // Try sound first. Browsers block unmuted autoplay until the visitor has
+    // interacted with the site, so on refusal the video starts muted and gets
+    // its sound on the first click, key press, touch or wheel.
+    const events = ["pointerdown", "keydown", "touchstart", "wheel"];
+    const unmuteOnInteraction = () => {
+      events.forEach((e) => window.removeEventListener(e, unmuteOnInteraction));
+      el.muted = false;
+      setMuted(false);
+      el.play().catch(() => {});
+    };
+
+    el.muted = false;
+    el.play()
+      .then(() => setMuted(false))
+      .catch(() => {
+        el.muted = true;
+        setMuted(true);
+        el.play().catch(() => setPlaying(false));
+        events.forEach((e) => window.addEventListener(e, unmuteOnInteraction, { once: true }));
+      });
+
+    return () => events.forEach((e) => window.removeEventListener(e, unmuteOnInteraction));
   }, [uploaded?.video_url]);
 
   const toggleMute = () => {
@@ -107,15 +127,28 @@ export default function HeroVideo({ uploaded, video, heroTitle }) {
 
         {/* Dark gradient so white text stays readable on any footage */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/10 pointer-events-none" />
+
+        {hasUploaded && (
+          <button
+            type="button"
+            onClick={toggleMute}
+            aria-label={muted ? "Unmute video" : "Mute video"}
+            className="absolute bottom-3 right-3 sm:bottom-5 sm:right-5 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white backdrop-blur-sm transition hover:bg-white hover:text-black cursor-pointer"
+          >
+            {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+          </button>
+        )}
         </div>
 
         {/* <div className="absolute inset-0 flex flex-col justify-end px-4 pb-8 sm:px-10 sm:pb-14 lg:px-[9%]"> */}
-        <div className="relative flex flex-col justify-end px-4 pt-6 pb-8 sm:px-10 sm:pb-10 lg:absolute lg:inset-0 lg:pt-0 lg:pb-14 lg:px-[9%]">
+        {/* Hero text and controls hidden for now. Remove the comment markers on
+            this line and the two blocks below to show them again.
+        <div className="relative flex flex-col justify-end px-4 pt-6 pb-8 sm:px-10 sm:pb-10 lg:absolute lg:inset-0 lg:pt-0 lg:pb-14 lg:px-[9%]"> */}
           {/* <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"> */}
           {/* Controls sit under the title until the screen is wide enough to fit both on one row */}
           {/* <div className="flex flex-col gap-6 2xl:flex-row 2xl:items-end 2xl:justify-between"> */}
           {/* Label on top; below it the title and the buttons share one row, centred on each other */}
-          <div className="min-w-0">
+          {/* <div className="min-w-0">
             {content?.eyebrow && (
               <p className="font-label mb-1.5 flex items-center gap-1.5 sm:gap-2 text-[8px] min-[400px]:text-[9px] sm:text-xs leading-tight font-semibold uppercase tracking-[0.12em] min-[400px]:tracking-[0.16em] sm:tracking-[0.25em] text-white/90">
                 <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 shrink-0 rounded-full bg-[#2FBF71]" aria-hidden="true" />
@@ -123,9 +156,9 @@ export default function HeroVideo({ uploaded, video, heroTitle }) {
               </p>
             )}
 
-          <div className="flex flex-col gap-6 2xl:flex-row 2xl:items-center 2xl:justify-between">
+          <div className="flex flex-col gap-6 2xl:flex-row 2xl:items-center 2xl:justify-between"> */}
             {/* <div className="max-w-3xl"> */}
-            <div className="min-w-0 2xl:flex-1">
+            {/* <div className="min-w-0 2xl:flex-1">
               {content?.title && (
                 // <h1 className="section-title font-heading text-[44px] leading-[0.98] sm:text-6xl lg:text-7xl xl:text-[96px] font-black uppercase tracking-tight text-white">
                 <h1 className="section-title font-heading text-[clamp(28px,7vw,40px)] sm:text-[clamp(32px,5vw,64px)] 2xl:text-[clamp(44px,3.3vw,76px)] leading-[1.05] 2xl:whitespace-nowrap font-black uppercase tracking-tight text-white">
@@ -176,7 +209,7 @@ export default function HeroVideo({ uploaded, video, heroTitle }) {
               </p>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

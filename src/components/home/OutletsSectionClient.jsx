@@ -142,12 +142,12 @@ export default function OutletsSectionClient({ outlets }) {
   const list = outlets ?? [];
 
   return (
-    <section className="bg-white pt-10 md:pt-14 pb-8">
+    <section className="bg-white pt-4 md:pt-6 pb-2">
       <div className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-10">
         <SectionHeading
-          eyebrow="Experience Lukaz"
+          align="center"
           title="Visit Our Outlets"
-          subtitle="Visit our stores for the best shopping experience, try-ons, and personal concierge service."
+          subtitle="Discover our collections in person at our showrooms.."
           action={
             <div className="flex items-center gap-4">
               {/* Swiper hides these (swiper-button-lock) when every card already fits. */}

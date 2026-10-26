@@ -27,9 +27,13 @@ export default function ProductCardShopPage({ product }) {
 
   const hoverPath = firstGalleryImage(product?.color_galleries);
   const [hoverFailed, setHoverFailed] = useState(false);
+  // True once the hover image has loaded. Until then the main image does not
+  // blur, so a missing or slow second image never leaves a blurred card.
+  const [hoverReady, setHoverReady] = useState(false);
 
   useEffect(() => {
     setHoverFailed(false);
+    setHoverReady(false);
   }, [hoverPath]);
 
   // Mounted only after the first hover, so a card costs one billed image
@@ -90,7 +94,9 @@ export default function ProductCardShopPage({ product }) {
             fill
             sizes={SHOP_GRID_SIZES}
             style={{ objectFit: "cover" }}
-            className="rounded-t-sm"
+            className={`rounded-t-sm transition duration-700 ease-in-out ${
+              showHoverImage && hoverReady ? "group-hover:blur-md group-hover:scale-105" : ""
+            }`}
           />
           {showHoverImage && (
             <Image
@@ -99,7 +105,10 @@ export default function ProductCardShopPage({ product }) {
               fill
               sizes={SHOP_GRID_SIZES}
               style={{ objectFit: "cover" }}
-              className="rounded-t-sm translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"
+              className={`rounded-t-sm opacity-0 transition-opacity duration-500 ease-in-out ${
+                hoverReady ? "group-hover:opacity-100 group-hover:delay-700" : ""
+              }`}
+              onLoad={() => setHoverReady(true)}
               onError={() => setHoverFailed(true)}
             />
           )}
@@ -126,15 +135,15 @@ export default function ProductCardShopPage({ product }) {
 
         <button
           onClick={() => handleWishList(product)}
-          className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white p-1.5 sm:p-2 rounded-full 
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white p-1 sm:p-1.5 rounded-full 
                      shadow-sm hover:scale-105 transition-transform focus:outline-none
                       focus:ring-2 focus:ring-gray-300 cursor-pointer"
           aria-label="Add to wishlist"
         >
           {isInWishlist(product?.slug) ? (
-            <Heart fill="red" stroke="red" />
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="red" stroke="red" />
           ) : (
-            <Heart />
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           )}
 
         </button>

@@ -106,7 +106,7 @@ export default function ContactPage({ outlets }) {
   return (
     <div className="min-h-screen ">
       {/* Header Section */}
-      <div className="bg-[#3A9E75] text-white py-10 sm:py-16">
+      <div className="bg-[#3A9E75] text-white py-10 sm:py-12">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isLoaded ? { opacity: 1, y: 0 } : {}}
@@ -124,7 +124,7 @@ export default function ContactPage({ outlets }) {
         initial="hidden"
         animate={isLoaded ? "visible" : "hidden"}
         variants={staggerContainer}
-        className="bg-[#E6F4EF]  py-12 "
+        className="bg-[#E6F4EF] py-8 sm:py-10"
       >
         <div className="mx-auto max-w-[1640px] px-3 sm:px-4 md:px-16 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:grid-rows-1">
           {/* Contact Form */}

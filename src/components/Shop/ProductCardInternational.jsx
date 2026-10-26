@@ -1,23 +1,63 @@
+"use client";
+
+import { useContext, useEffect, useState } from "react";
 import { WishListContext } from "@/context/WishListContext";
-import { getImageUrl } from "@/utils/helpers";
+import { getImageUrl, getFallbackImageUrl, PLACEHOLDER_IMAGE } from "@/utils/helpers";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useContext } from "react";
+import toast from "react-hot-toast";
+
+// color_galleries is stored as a JSON string in the DB; parse safely
+function firstGalleryImage(raw) {
+  if (!raw) return null;
+  try {
+    const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+    return Array.isArray(parsed) ? parsed[0] || null : null;
+  } catch {
+    return null;
+  }
+}
+
+const imageSizes =
+  "(max-width: 767px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw";
 
 export default function ProductCardInternational({ product }) {
   const { state, dispatch } = useContext(WishListContext);
 
-  const isInWishlist = (slug) => {
-    const exists = state?.items?.find(
-      (item) => item?.productData?.slug === slug
-    );
-    return exists;
+  // ── Main image with fallback chain ────────────────────────────────────────
+  const thumbPath = product?.color_thumbnails;
 
-  }
-  // console.log("wishlist state",state)
+  const chain = [
+    getImageUrl("products", thumbPath),
+    getFallbackImageUrl("products", thumbPath),
+    PLACEHOLDER_IMAGE,
+  ]
+    .filter(Boolean)
+    .filter((url, i, all) => all.indexOf(url) === i);
 
-  const handleWishList = (product) => {
+  const [step, setStep] = useState(0);
+  useEffect(() => { setStep(0); }, [thumbPath]);
+
+  // ── Hover image ───────────────────────────────────────────────────────────
+  const hoverPath = firstGalleryImage(product?.color_galleries);
+  const [hoverFailed, setHoverFailed] = useState(false);
+  // True once the hover image has loaded. Until then the main image does not
+  // blur, so a missing or slow second image never leaves a blurred card.
+  const [hoverReady, setHoverReady] = useState(false);
+  useEffect(() => { setHoverFailed(false); setHoverReady(false); }, [hoverPath]);
+
+  // Mounted only after the first hover, so a card costs one billed image
+  // instead of two. Touch screens never hover and never load it.
+  const [hovered, setHovered] = useState(false);
+
+  const showHoverImage = hovered && Boolean(hoverPath) && !hoverFailed;
+
+  // ── Wishlist ──────────────────────────────────────────────────────────────
+  const isInWishlist = (slug) =>
+    state?.items?.some((item) => item?.productData?.slug === slug);
+
+  const handleWishList = () => {
     const payload = {
       productData: product,
       id: crypto.randomUUID(),
@@ -28,74 +68,88 @@ export default function ProductCardInternational({ product }) {
       selectedColor: product?.color,
       selectedColourSlug: product?.slug,
       selectedItemImage: product?.color_icon,
-    }
-    // console.log("test", isInWishlist(product?.id))
+    };
+
     if (isInWishlist(product?.slug)) {
       dispatch({ type: "REMOVE_ITEM", payload: product?.slug });
-      toast.success(`Remove from wishlist!`);
+      toast.success("Removed from wishlist!");
     } else {
       dispatch({ type: "ADD_ITEM", payload });
-      toast.success(`Added to wishlist!`);
+      toast.success("Added to wishlist!");
     }
   };
 
   return (
     <div
-
-      className="bg-white rounded-sm  overflow-hidden transform transition-all duration-300 hover:shadow-lg  cursor-pointer"
+      onMouseEnter={() => setHovered(true)}
+      className="group bg-white rounded-sm overflow-hidden cursor-pointer"
     >
-      <div className="relative w-full h-56 sm:h-80 ">
-        <Link
-          href={`/international-product/${product?.slug}`}
-          prefetch={false}
-        >
+      {/* Image */}
+      <div className="relative w-full h-56 sm:h-80 overflow-hidden">
+        <Link href={`/international-product/${product?.slug}`} prefetch={false}>
+          {/* Main image */}
           <Image
-            src={getImageUrl("products", product?.color_thumbnails)}
-            alt="product image"
+            src={chain[step]}
+            alt={product?.product_name || "Product image"}
             fill
-            sizes="(max-width: 767px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
-            style={{ objectFit: "cover" }}
-            className="rounded-t-sm"
+            sizes={imageSizes}
+            className={`object-cover rounded-t-sm transition duration-700 ease-in-out ${
+              showHoverImage && hoverReady ? "group-hover:blur-md group-hover:scale-105" : ""
+            }`}
+            onError={() =>
+              setStep((prev) => (prev < chain.length - 1 ? prev + 1 : prev))
+            }
           />
+
+          {/* Hover image — fades in once the main image has blurred (0.7s) */}
+          {showHoverImage && (
+            <Image
+              src={getImageUrl("products", hoverPath)}
+              alt={product?.product_name || "Product image"}
+              fill
+              sizes={imageSizes}
+              className={`object-cover rounded-t-sm opacity-0 transition-opacity duration-500 ease-in-out ${
+                hoverReady ? "group-hover:opacity-100 group-hover:delay-700" : ""
+              }`}
+              onLoad={() => setHoverReady(true)}
+              onError={() => setHoverFailed(true)}
+            />
+          )}
         </Link>
-        {(product?.regular_price && product?.discount_type == 1) && (
+
+        {/* Discount badge */}
+        {product?.regular_price && product?.discount_type == 1 && (
           <span className="absolute top-5 left-2 sm:left-4 bg-black text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm">
-            -{Math.floor(100 / product?.regular_price * product?.discount)}%
+            -{Math.floor((100 / product.regular_price) * product.discount)}%
           </span>
-        )
-        }
-
-        {(product?.regular_price && product?.discount_type != 1) && (
-
+        )}
+        {product?.regular_price && product?.discount_type != 1 && (
           <span className="absolute top-4 left-2 sm:left-4 bg-black text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm">
-            -{product?.discount}
+            -{product.discount}
           </span>
+        )}
 
-        )
-        }
-
+        {/* Wishlist */}
         <button
-          onClick={() => handleWishList(product)}
-          className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white p-1.5 sm:p-2 rounded-full 
-                     shadow-sm hover:scale-105 transition-transform focus:outline-none
-                      focus:ring-2 focus:ring-gray-300 cursor-pointer"
-          aria-label="Add to wishlist"
+          type="button"
+          onClick={handleWishList}
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white p-1 sm:p-1.5 rounded-full shadow-sm hover:scale-105 transition-transform focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer"
+          aria-label={isInWishlist(product?.slug) ? "Remove from wishlist" : "Add to wishlist"}
         >
           {isInWishlist(product?.slug) ? (
-            <Heart fill="red" stroke="red" />
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="red" stroke="red" />
           ) : (
-            <Heart />
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           )}
-
         </button>
       </div>
-      <div className="p-2.5 sm:p-3">
-        <div className="flex justify-between">
-          <p className="text-sm text-gray-500 font-medium mb-1">
-            {product?.brand_name || "No Brand Found"}
-          </p>
 
-        </div>
+      {/* Info */}
+      <div className="p-2.5 sm:p-3">
+        <p className="text-sm text-gray-500 font-medium mb-1">
+          {product?.brand_name || "No Brand Found"}
+        </p>
+
         <Link
           href={`/international-product/${product?.slug}`}
           prefetch={false}
@@ -110,14 +164,14 @@ export default function ProductCardInternational({ product }) {
           className="text-md font-semibold text-gray-800 mb-2"
         >
           <div className="flex flex-wrap gap-x-3 gap-y-0.5 items-center mt-1">
-            {product?.regular_price && (<p className="text-sm font-bold text-gray-900 line-through">
-              Tk. {product?.regular_price}
-            </p>)}
+            {product?.regular_price && (
+              <p className="text-sm font-bold text-gray-900 line-through">
+                Tk. {product.regular_price}
+              </p>
+            )}
             <p className="text-sm font-bold text-[#3A9E75]">
               Tk. {product?.current_price}
             </p>
-
-
           </div>
         </Link>
       </div>
