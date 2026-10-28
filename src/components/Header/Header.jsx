@@ -145,7 +145,7 @@ export default function Header({ mainMenus, categories, topBar, logoUrl }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-1.5 lg:gap-2.5 px-3 py-2 lg:px-8 lg:py-3 rounded-xl lg:rounded-2xl border text-xs lg:text-base font-semibold transition-all duration-200 whitespace-nowrap
+                    className={`flex items-center gap-1.5 lg:gap-2.5 px-3 py-2 lg:px-8 lg:py-3 rounded-lg lg:rounded-xl border text-xs lg:text-base font-semibold transition-all duration-200 whitespace-nowrap
                       ${isActive
                         ? "bg-[#eaf7f1] border-[#3a9e74] text-[#2a7a57]"
                         : "bg-white border-gray-200 text-gray-700 hover:bg-[#eaf7f1] hover:border-[#3a9e74] hover:text-[#2a7a57]"

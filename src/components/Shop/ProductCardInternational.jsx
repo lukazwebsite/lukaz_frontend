@@ -22,6 +22,8 @@ function firstGalleryImage(raw) {
 const imageSizes =
   "(max-width: 767px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw";
 
+const TRANSITION = "opacity 800ms ease-in-out, filter 800ms ease-in-out, transform 800ms ease-in-out";
+
 export default function ProductCardInternational({ product }) {
   const { state, dispatch } = useContext(WishListContext);
 
@@ -42,16 +44,11 @@ export default function ProductCardInternational({ product }) {
   // ── Hover image ───────────────────────────────────────────────────────────
   const hoverPath = firstGalleryImage(product?.color_galleries);
   const [hoverFailed, setHoverFailed] = useState(false);
-  // True once the hover image has loaded. Until then the main image does not
-  // blur, so a missing or slow second image never leaves a blurred card.
   const [hoverReady, setHoverReady] = useState(false);
   useEffect(() => { setHoverFailed(false); setHoverReady(false); }, [hoverPath]);
 
-  // Mounted only after the first hover, so a card costs one billed image
-  // instead of two. Touch screens never hover and never load it.
   const [hovered, setHovered] = useState(false);
-
-  const showHoverImage = hovered && Boolean(hoverPath) && !hoverFailed;
+  const hasHover = Boolean(hoverPath) && !hoverFailed && hoverReady;
 
   // ── Wishlist ──────────────────────────────────────────────────────────────
   const isInWishlist = (slug) =>
@@ -82,35 +79,46 @@ export default function ProductCardInternational({ product }) {
   return (
     <div
       onMouseEnter={() => setHovered(true)}
-      className="group bg-white rounded-sm overflow-hidden cursor-pointer"
+      onMouseLeave={() => setHovered(false)}
+      className="bg-white rounded-sm overflow-hidden cursor-pointer"
     >
       {/* Image */}
       <div className="relative w-full h-56 sm:h-80 overflow-hidden">
         <Link href={`/international-product/${product?.slug}`} prefetch={false}>
-          {/* Main image */}
+
+          {/* Main image: clear → blur on hover, blur → clear on leave */}
           <Image
             src={chain[step]}
             alt={product?.product_name || "Product image"}
             fill
             sizes={imageSizes}
-            className={`object-cover rounded-t-sm transition duration-700 ease-in-out ${
-              showHoverImage && hoverReady ? "group-hover:blur-md group-hover:scale-105" : ""
-            }`}
+            style={{
+              objectFit: "cover",
+              filter: hasHover && hovered ? "blur(8px)" : "blur(0px)",
+              transform: hasHover && hovered ? "scale(1.05)" : "scale(1)",
+              transition: TRANSITION,
+            }}
+            className="rounded-t-sm"
             onError={() =>
               setStep((prev) => (prev < chain.length - 1 ? prev + 1 : prev))
             }
           />
 
-          {/* Hover image — fades in once the main image has blurred (0.7s) */}
-          {showHoverImage && (
+          {/* Hover image: hidden + blurry → visible + sharp on hover, reverse on leave */}
+          {/* Preload silently even before first hover */}
+          {Boolean(hoverPath) && !hoverFailed && (
             <Image
               src={getImageUrl("products", hoverPath)}
               alt={product?.product_name || "Product image"}
               fill
               sizes={imageSizes}
-              className={`object-cover rounded-t-sm opacity-0 transition-opacity duration-500 ease-in-out ${
-                hoverReady ? "group-hover:opacity-100 group-hover:delay-700" : ""
-              }`}
+              style={{
+                objectFit: "cover",
+                opacity: hasHover && hovered ? 1 : 0,
+                filter: hasHover && hovered ? "blur(0px)" : "blur(8px)",
+                transition: TRANSITION,
+              }}
+              className="rounded-t-sm"
               onLoad={() => setHoverReady(true)}
               onError={() => setHoverFailed(true)}
             />

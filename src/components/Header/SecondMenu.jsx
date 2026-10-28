@@ -73,7 +73,7 @@ export default function SecondMenu() {
               key={index}
               href={item.href}
               onClick={() => handleCategoryFilter(item)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border transition-all duration-200 text-sm font-semibold flex-1 justify-center
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-200 text-sm font-semibold flex-1 justify-center
                 ${isActive
                   ? 'bg-[#eaf7f1] border-[#3a9e74] text-[#2a7a57]'
                   : 'bg-white border-gray-200 text-gray-700 hover:bg-[#eaf7f1] hover:border-[#3a9e74] hover:text-[#2a7a57]'

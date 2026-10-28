@@ -8,7 +8,6 @@ import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
-// color_galleries is stored as a JSON string in the DB; parse safely
 function firstGalleryImage(raw) {
   if (!raw) return null;
   try {
@@ -18,6 +17,8 @@ function firstGalleryImage(raw) {
     return null;
   }
 }
+
+const TRANSITION = "opacity 800ms ease-in-out, filter 800ms ease-in-out, transform 800ms ease-in-out";
 
 export default function ProductCardByCategories({ product, productFullData, gridCols = 5 }) {
   const { state, dispatch } = useContext(WishListContext);
@@ -39,18 +40,12 @@ export default function ProductCardByCategories({ product, productFullData, grid
   // ── Hover image ───────────────────────────────────────────────────────────
   const hoverPath = firstGalleryImage(productFullData?.color_galleries);
   const [hoverFailed, setHoverFailed] = useState(false);
-  // True once the hover image has loaded. Until then the main image does not
-  // blur, so a missing or slow second image never leaves a blurred card.
   const [hoverReady, setHoverReady] = useState(false);
   useEffect(() => { setHoverFailed(false); setHoverReady(false); }, [hoverPath]);
 
-  // Mounted only after the first hover, so a card costs one billed image
-  // instead of two. Touch screens never hover and never load it.
   const [hovered, setHovered] = useState(false);
+  const hasHover = Boolean(hoverPath) && !hoverFailed && hoverReady;
 
-  const showHoverImage = hovered && Boolean(hoverPath) && !hoverFailed;
-
-  // Below 1024px the grid is always 2 columns; above it the shopper picks.
   const imageSizes = `(max-width: 1023px) 50vw, ${Math.ceil(100 / gridCols)}vw`;
 
   // ── Wishlist ──────────────────────────────────────────────────────────────
@@ -82,35 +77,45 @@ export default function ProductCardByCategories({ product, productFullData, grid
   return (
     <div
       onMouseEnter={() => setHovered(true)}
-      className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 cursor-pointer"
+      onMouseLeave={() => setHovered(false)}
+      className="bg-white rounded-sm overflow-hidden transform transition-all duration-300 cursor-pointer"
     >
       {/* Image */}
       <div className="relative w-full aspect-[4/5] overflow-hidden">
         <Link href={`/product/${productFullData?.slug}`} prefetch={false}>
-          {/* Main image */}
+
+          {/* Main image: clear → blur on hover, blur → clear on leave */}
           <Image
             src={chain[step]}
             alt={product?.name || "Product image"}
             fill
             sizes={imageSizes}
-            className={`object-cover rounded-t-sm transition duration-700 ease-in-out ${
-              showHoverImage && hoverReady ? "group-hover:blur-md group-hover:scale-105" : ""
-            }`}
+            style={{
+              objectFit: "cover",
+              filter: hasHover && hovered ? "blur(8px)" : "blur(0px)",
+              transform: hasHover && hovered ? "scale(1.05)" : "scale(1)",
+              transition: TRANSITION,
+            }}
+            className="rounded-t-sm"
             onError={() =>
               setStep((prev) => (prev < chain.length - 1 ? prev + 1 : prev))
             }
           />
 
-          {/* Hover image — fades in once the main image has blurred (0.7s) */}
-          {showHoverImage && (
+          {/* Hover image: hidden+blurry → visible+sharp on hover, reverse on leave */}
+          {Boolean(hoverPath) && !hoverFailed && (
             <Image
               src={getImageUrl("products", hoverPath)}
               alt={product?.name || "Product image"}
               fill
               sizes={imageSizes}
-              className={`object-cover rounded-t-sm opacity-0 transition-opacity duration-500 ease-in-out ${
-                hoverReady ? "group-hover:opacity-100 group-hover:delay-700" : ""
-              }`}
+              style={{
+                objectFit: "cover",
+                opacity: hasHover && hovered ? 1 : 0,
+                filter: hasHover && hovered ? "blur(0px)" : "blur(8px)",
+                transition: TRANSITION,
+              }}
+              className="rounded-t-sm"
               onLoad={() => setHoverReady(true)}
               onError={() => setHoverFailed(true)}
             />

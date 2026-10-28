@@ -81,7 +81,7 @@ export default function WishListSideBar() {
                         </div>
                       </div>
                       <button
-                        onClick={() => removeItem(item?.productData?.slug)}
+                        onClick={() => removeItem(item?.slug)}
                         className="text-red-500 hover:text-red-600 cursor-pointer"
                       >
                         <Trash2 size={18} />

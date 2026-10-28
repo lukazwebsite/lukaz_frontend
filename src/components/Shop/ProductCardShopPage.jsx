@@ -6,12 +6,11 @@ import Link from "next/link";
 import React, { useContext, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-// Card width in the shop grids (1 → 2/3 → 4 → 5 columns). Without this Next
-// assumes 100vw and serves a 1920px image into a ~300px card.
 const SHOP_GRID_SIZES =
   "(max-width: 767px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw";
 
-// Parse first gallery image same way ProductCard does
+const TRANSITION = "opacity 800ms ease-in-out, filter 800ms ease-in-out, transform 800ms ease-in-out";
+
 function firstGalleryImage(raw) {
   if (!raw) return null;
   try {
@@ -27,8 +26,6 @@ export default function ProductCardShopPage({ product }) {
 
   const hoverPath = firstGalleryImage(product?.color_galleries);
   const [hoverFailed, setHoverFailed] = useState(false);
-  // True once the hover image has loaded. Until then the main image does not
-  // blur, so a missing or slow second image never leaves a blurred card.
   const [hoverReady, setHoverReady] = useState(false);
 
   useEffect(() => {
@@ -36,23 +33,13 @@ export default function ProductCardShopPage({ product }) {
     setHoverReady(false);
   }, [hoverPath]);
 
-  // Mounted only after the first hover, so a card costs one billed image
-  // instead of two. Touch screens never hover and never load it.
   const [hovered, setHovered] = useState(false);
+  const hasHover = Boolean(hoverPath) && !hoverFailed && hoverReady;
 
-  const showHoverImage = hovered && Boolean(hoverPath) && !hoverFailed;
-
-  const isInWishlist = (slug) => {
-    const exists = state.items.find(
-      (item) => item?.productData?.slug === slug
-    );
-    return exists;
-
-  }
-
+  const isInWishlist = (slug) =>
+    state.items.find((item) => item?.productData?.slug === slug);
 
   const handleWishList = (product) => {
-
     const payload = {
       productData: product,
       id: crypto.randomUUID(),
@@ -63,8 +50,7 @@ export default function ProductCardShopPage({ product }) {
       selectedColor: product?.color,
       selectedColourSlug: product?.slug,
       selectedItemImage: product?.color_icon,
-    }
-    // console.log("test", isInWishlist(product?.id))
+    };
     if (isInWishlist(product?.slug)) {
       dispatch({ type: "REMOVE_ITEM", payload: product?.slug });
       toast.success(`Remove from wishlist!`);
@@ -72,72 +58,66 @@ export default function ProductCardShopPage({ product }) {
       dispatch({ type: "ADD_ITEM", payload });
       toast.success(`Added to wishlist!`);
     }
-
-
   };
-
-
-
-  // console.log("product", product)
 
   return (
     <div
       onMouseEnter={() => setHovered(true)}
-      className="group bg-white rounded-sm overflow-hidden transform transition-all duration-300 shadow-lg hover:shadow-xl
-      cursor-pointer"
+      onMouseLeave={() => setHovered(false)}
+      className="bg-white rounded-sm overflow-hidden transform transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
     >
       <div className="relative w-full h-56 sm:h-80 overflow-hidden">
         <Link href={`/product/${product?.slug}`} prefetch={false}>
+
+          {/* Main image: clear → blur on hover, blur → clear on leave */}
           <Image
             src={getImageUrl("products", product?.color_thumbnails)}
             alt="product image"
             fill
             sizes={SHOP_GRID_SIZES}
-            style={{ objectFit: "cover" }}
-            className={`rounded-t-sm transition duration-700 ease-in-out ${
-              showHoverImage && hoverReady ? "group-hover:blur-md group-hover:scale-105" : ""
-            }`}
+            style={{
+              objectFit: "cover",
+              filter: hasHover && hovered ? "blur(8px)" : "blur(0px)",
+              transform: hasHover && hovered ? "scale(1.05)" : "scale(1)",
+              transition: TRANSITION,
+            }}
+            className="rounded-t-sm"
           />
-          {showHoverImage && (
+
+          {/* Hover image: hidden+blurry → visible+sharp on hover, reverse on leave */}
+          {Boolean(hoverPath) && !hoverFailed && (
             <Image
               src={getImageUrl("products", hoverPath)}
               alt="product hover image"
               fill
               sizes={SHOP_GRID_SIZES}
-              style={{ objectFit: "cover" }}
-              className={`rounded-t-sm opacity-0 transition-opacity duration-500 ease-in-out ${
-                hoverReady ? "group-hover:opacity-100 group-hover:delay-700" : ""
-              }`}
+              style={{
+                objectFit: "cover",
+                opacity: hasHover && hovered ? 1 : 0,
+                filter: hasHover && hovered ? "blur(0px)" : "blur(8px)",
+                transition: TRANSITION,
+              }}
+              className="rounded-t-sm"
               onLoad={() => setHoverReady(true)}
               onError={() => setHoverFailed(true)}
             />
           )}
         </Link>
-        {(product?.regular_price && product?.discount_type == 1) && (
 
-
+        {product?.regular_price && product?.discount_type == 1 && (
           <span className="absolute top-5 left-2 sm:left-4 bg-[#3A9E75] text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm">
             -{Math.floor(100 / product?.regular_price * product?.discount)}%
           </span>
-        )
-
-        }
-
-
-        {(product?.regular_price && product?.discount_type != 1) && (
-
+        )}
+        {product?.regular_price && product?.discount_type != 1 && (
           <span className="absolute top-4 left-2 sm:left-4 bg-[#3A9E75] text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm">
             -{product?.discount}
           </span>
-
-        )
-        }
+        )}
 
         <button
           onClick={() => handleWishList(product)}
-          className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white p-1 sm:p-1.5 rounded-full 
-                     shadow-sm hover:scale-105 transition-transform focus:outline-none
-                      focus:ring-2 focus:ring-gray-300 cursor-pointer"
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white p-1 sm:p-1.5 rounded-full shadow-sm hover:scale-105 transition-transform focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer"
           aria-label="Add to wishlist"
         >
           {isInWishlist(product?.slug) ? (
@@ -145,38 +125,24 @@ export default function ProductCardShopPage({ product }) {
           ) : (
             <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           )}
-
         </button>
       </div>
+
       <div className="p-2.5 sm:p-3">
         <div className="flex justify-between">
           <p className="text-sm text-gray-500 font-medium mb-1">
             {product?.brand_name || "No Brand Found"}
           </p>
-
         </div>
-        <Link
-          href={`/product/${product?.slug}`}
-          prefetch={false}
-          className="text-md font-semibold text-gray-800 mb-2"
-        >
+        <Link href={`/product/${product?.slug}`} prefetch={false} className="text-md font-semibold text-gray-800 mb-2">
           {product?.product_name}
         </Link>
-
-        <Link
-          href={`/product/${product?.slug}`}
-          prefetch={false}
-          className="text-md font-semibold text-gray-800 mb-2"
-        >
+        <Link href={`/product/${product?.slug}`} prefetch={false} className="text-md font-semibold text-gray-800 mb-2">
           <div className="flex flex-wrap gap-x-3 gap-y-0.5 items-center mt-1">
-            {product?.regular_price && (<p className="text-sm font-bold text-gray-900 line-through">
-              Tk. {product?.regular_price}
-            </p>)}
-            <p className="text-sm font-bold text-[#3A9E75]">
-              Tk. {product?.current_price}
-            </p>
-
-
+            {product?.regular_price && (
+              <p className="text-sm font-bold text-gray-900 line-through">Tk. {product?.regular_price}</p>
+            )}
+            <p className="text-sm font-bold text-[#3A9E75]">Tk. {product?.current_price}</p>
           </div>
         </Link>
       </div>
