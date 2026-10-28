@@ -12,7 +12,7 @@ function wishListReducer(state, action) {
   switch (action.type) {
     case "ADD_ITEM": {
       const exists = state.items.find(
-        (item) => item?.productData?.slug === action?.payload?.productData?.slug
+        (item) => item?.slug === action?.payload?.slug
       );
 
       if (exists) {
@@ -30,7 +30,7 @@ function wishListReducer(state, action) {
       return {
         ...state,
         items: state.items.filter(
-          (item) => item?.productData?.slug !== action?.payload
+          (item) => item?.slug !== action?.payload
         ),
       };
 
