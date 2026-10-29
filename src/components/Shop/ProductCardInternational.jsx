@@ -22,7 +22,7 @@ function firstGalleryImage(raw) {
 const imageSizes =
   "(max-width: 767px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw";
 
-const TRANSITION = "opacity 800ms ease-in-out, filter 800ms ease-in-out, transform 800ms ease-in-out";
+const TRANSITION = "opacity 700ms cubic-bezier(0.4, 0, 0.2, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)";
 
 export default function ProductCardInternational({ product }) {
   const { state, dispatch } = useContext(WishListContext);
@@ -86,25 +86,20 @@ export default function ProductCardInternational({ product }) {
       <div className="relative w-full h-56 sm:h-80 overflow-hidden">
         <Link href={`/international-product/${product?.slug}`} prefetch={false}>
 
-          {/* Main image: clear → blur on hover, blur → clear on leave */}
+          {/* Main image: stays at 100%, the hover image fades in over it */}
           <Image
             src={chain[step]}
             alt={product?.product_name || "Product image"}
             fill
             sizes={imageSizes}
-            style={{
-              objectFit: "cover",
-              filter: hasHover && hovered ? "blur(8px)" : "blur(0px)",
-              transform: hasHover && hovered ? "scale(1.05)" : "scale(1)",
-              transition: TRANSITION,
-            }}
+            style={{ objectFit: "cover" }}
             className="rounded-t-sm"
             onError={() =>
               setStep((prev) => (prev < chain.length - 1 ? prev + 1 : prev))
             }
           />
 
-          {/* Hover image: hidden + blurry → visible + sharp on hover, reverse on leave */}
+          {/* Hover image: fades in and eases into a slight zoom, reverse on leave */}
           {/* Preload silently even before first hover */}
           {Boolean(hoverPath) && !hoverFailed && (
             <Image
@@ -115,8 +110,9 @@ export default function ProductCardInternational({ product }) {
               style={{
                 objectFit: "cover",
                 opacity: hasHover && hovered ? 1 : 0,
-                filter: hasHover && hovered ? "blur(0px)" : "blur(8px)",
+                transform: hasHover && hovered ? "scale(1.06)" : "scale(1)",
                 transition: TRANSITION,
+                willChange: "opacity, transform",
               }}
               className="rounded-t-sm"
               onLoad={() => setHoverReady(true)}
