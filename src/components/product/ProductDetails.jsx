@@ -16,7 +16,7 @@ import toast from "react-hot-toast"
 import Reviews from "@/components/product/Reviews"
 import { useParams } from "next/navigation"
 import axiosInstance from "@/utils/axiosInstance"
-import { getImageUrl } from "@/utils/helpers"
+import { getImageUrl, variantKey } from "@/utils/helpers"
 import { addToWishList } from "@/utils/addToWishList"
 import { WishListContext } from "@/context/WishListContext"
 import Link from "next/link"
@@ -102,11 +102,9 @@ export default function ProductDetails({ product }) {
     }, [product]);
 
     useEffect(() => {
-        // const selectedtem = product?.additionals?.find((item) => item?.additional_key == customSlug) || {}
-        const normalizedSlug = customSlug?.replace(/\s+/g, "_");
         const selectedItem =
             product?.additionals?.find(
-                (item) => item?.additional_key === normalizedSlug
+                (item) => item?.additional_key === customSlug
             ) || {};
         setSelectItemFromAdditional(selectedItem);
 
@@ -123,24 +121,14 @@ export default function ProductDetails({ product }) {
         setMainImage(item?.color_thumbnails)
         setSelectedItemImage(item?.color_icon_small)
         setCurrentImageIndex(0)
-        // setCustomSlug(`${product?.product_id}_${item?.color?.toLowerCase()}_${selectedSize?.toLowerCase()}`)
-        setCustomSlug(
-            `${product?.product_id}_${item?.color?.trim().toLowerCase()
-            }_${selectedSize?.trim().toLowerCase()
-            }`
-        )
+        setCustomSlug(variantKey(product?.product_id, item?.color, selectedSize))
     }
 
 
     const handleSizeSelect = (item) => {
         setSelectedSize(item);
 
-        setCustomSlug(
-            `${product?.product_id}_${selectedColor?.trim().toLowerCase()
-            }_${item?.trim().toLowerCase()
-            }`
-        )
-        // setCustomSlug(`${product?.product_id}_${selectedColor.toLowerCase()}_${item.toLowerCase()}`)
+        setCustomSlug(variantKey(product?.product_id, selectedColor, item))
     }
 
     const isPreOrderRequired = () => {

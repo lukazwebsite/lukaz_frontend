@@ -26,6 +26,13 @@ function firstGalleryImage(raw) {
 
 const formatPrice = (value) => Number(value || 0).toLocaleString("en-US");
 
+// Slot width for this card inside the home tickers (components/shared/Ticker).
+// Cards per view: 1.2 / 2.2 / 2.8 / 3.2 / 4.2 / 4.4 at 0 / 640 / 768 / 1024 /
+// 1424 / 1624 px, with a 16px gap. The last two use rem (89rem = 1424px,
+// 101.5rem = 1624px) so Tailwind sorts them after its built-in rem breakpoints.
+export const HOME_PRODUCT_CARD_WIDTH =
+  "w-[calc((100cqw-3.2px)/1.2)] sm:w-[calc((100cqw-19.2px)/2.2)] md:w-[calc((100cqw-28.8px)/2.8)] lg:w-[calc((100cqw-35.2px)/3.2)] min-[89rem]:w-[calc((100cqw-51.2px)/4.2)] min-[101.5rem]:w-[calc((100cqw-54.4px)/4.4)]";
+
 function StockBadge({ item }) {
   // total_stock comes from the products list API; hide the badge if it is missing
   if (item?.total_stock === undefined || item?.total_stock === null) return null;

@@ -22,7 +22,7 @@ function firstGalleryImage(raw) {
 const imageSizes =
   "(max-width: 767px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw";
 
-const TRANSITION = "opacity 700ms cubic-bezier(0.4, 0, 0.2, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)";
+const TRANSITION = "opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1), transform 2000ms cubic-bezier(0.33, 1, 0.68, 1)";
 
 export default function ProductCardInternational({ product }) {
   const { state, dispatch } = useContext(WishListContext);

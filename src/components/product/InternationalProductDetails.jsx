@@ -16,7 +16,7 @@ import toast from "react-hot-toast"
 import Reviews from "@/components/product/Reviews"
 import { useParams } from "next/navigation"
 import axiosInstance from "@/utils/axiosInstance"
-import { getImageUrl } from "@/utils/helpers"
+import { getImageUrl, variantKey } from "@/utils/helpers"
 import { addToWishList } from "@/utils/addToWishList"
 import { WishListContext } from "@/context/WishListContext"
 import Link from "next/link"
@@ -93,13 +93,13 @@ export default function InternationalProductDetails({ product }) {
     setSelectedColourSlug(item?.slug)
     setMainImage(item?.color_thumbnails)
     setSelectedItemImage(item?.color_icon_small)
-    setCustomSlug(`${product?.product_id}_${item?.color?.toLowerCase()}_${selectedSize}`)
+    setCustomSlug(variantKey(product?.product_id, item?.color, selectedSize))
 
   }
 
   const handleSizeSelect = (item) => {
     setSelectedSize(item)
-    setCustomSlug(`${product?.product_id}_${selectedColor.toLowerCase()}_${item}`)
+    setCustomSlug(variantKey(product?.product_id, selectedColor, item))
 
   }
 

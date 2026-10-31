@@ -1,13 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay } from 'swiper/modules';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import ProductCard from '../Cards/ProductCard';
-import HomeProductCard from '../Cards/HomeProductCard';
+import HomeProductCard, { HOME_PRODUCT_CARD_WIDTH } from '../Cards/HomeProductCard';
+import Ticker, { useTicker } from '../shared/Ticker';
 import axiosInstance from '@/utils/axiosInstance';
 import ProductListSkeleton from '../Skeletons/ProductListSkeleton';
 
@@ -53,6 +48,10 @@ export default function ProductSlider() {
 
     fetchProducts();
   }, [activeTab]);
+
+  // The API returns a paginated object; the cards are in its `data` array.
+  const products = productsData?.data ?? [];
+  const ticker = useTicker(products);
 
   return (
     <div className="py-6 md:py-8 relative">
@@ -150,73 +149,18 @@ export default function ProductSlider() {
         </div> */}
       </div>
 
-      <Swiper
-        slidesPerView={1.2}
-        spaceBetween={16}
-
-        // slower, eased slide change instead of the default 300ms jump
-        speed={900}
-        style={{ '--swiper-wrapper-transition-timing-function': 'cubic-bezier(0.25, 0.8, 0.25, 1)' }}
-
-        // mouse drag: grab any card and pull left/right; small threshold keeps plain clicks opening the product
-        simulateTouch
-        grabCursor
-        threshold={5}
-        followFinger
-        resistanceRatio={0.6}
-
-        // loop only when there are enough slides to fill both sides, otherwise Swiper warns and rewinds
-        loop={(productsData?.data?.length || 0) > 9}
-
-        navigation={{
-          nextEl: '.swiper-button-next-custom',
-          prevEl: '.swiper-button-prev-custom',
-        }}
-
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        }}
-
-        // breakpoints={{
-        //   640: { slidesPerView: 2.2 },
-        //   768: { slidesPerView: 3.2 },
-        //   1024: { slidesPerView: 4.2 },
-        //   1424: { slidesPerView: 5.4 },
-        //   1624: { slidesPerView: 6.2 },
-        // }}
-        breakpoints={{
-          640: { slidesPerView: 2.2 },
-          768: { slidesPerView: 2.8 },
-          1024: { slidesPerView: 3.2 },
-          1424: { slidesPerView: 4.2 },
-          1624: { slidesPerView: 4.4 },
-        }}
-
-        modules={[Navigation, Autoplay]}
-
-        onInit={(swiper) => {
-          swiper.params.navigation.prevEl = '.swiper-button-prev-custom';
-          swiper.params.navigation.nextEl = '.swiper-button-next-custom';
-          swiper.navigation.init();
-          swiper.navigation.update();
-        }}
-      >
-        {loading ? (
-          <ProductListSkeleton />
-        ) : productsData?.length === 0 ? (
-          <h1 className="text-center w-full py-10">No Products Found</h1>
-        ) : (
-          productsData?.data?.map((item) => (
-            <SwiperSlide key={item.id}>
-              {/* <ProductCard item={item} /> */}
-              <HomeProductCard item={item} />
-            </SwiperSlide>
-          ))
-        )}
-
-      </Swiper>
+      {/* Endless auto-scrolling band. Hover pauses; drag or swipe moves it by hand. */}
+      {loading ? (
+        <ProductListSkeleton />
+      ) : !products.length ? (
+        <h1 className="text-center w-full py-10">No Products Found</h1>
+      ) : (
+        <Ticker
+          ticker={ticker}
+          itemClassName={HOME_PRODUCT_CARD_WIDTH}
+          renderItem={(item) => <HomeProductCard item={item} />}
+        />
+      )}
 
     </div>
   );

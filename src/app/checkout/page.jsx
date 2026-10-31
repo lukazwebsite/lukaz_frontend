@@ -8,7 +8,7 @@ import Link from "next/link"
 import toast from "react-hot-toast"
 import axiosInstance from "@/utils/axiosInstance"
 import { CartContext } from "@/context/CartContext"
-import { getImageUrl, hasPreOrder, transformCartItem } from "@/utils/helpers"
+import { getImageUrl, hasPreOrder, transformCartItem, variantKey } from "@/utils/helpers"
 import { UserContext } from "@/context/UserContext"
 import { useRouter } from "next/navigation"
 import { findByName, findDistrictName, findThanaNames } from "@/utils/findDistrictName"
@@ -148,7 +148,7 @@ export default function CartCheckoutPage() {
 
     // Handle color change for cart items
     const handleColorChange = (itemId, newColor, item) => {
-        const new_Slug = `${item?.item_id}_${newColor.toLowerCase()}_${item?.SelectedSize}`
+        const new_Slug = variantKey(item?.item_id, newColor, item?.SelectedSize)
         const preOrder = isPreOrderRequired(item, new_Slug)
 
         if (preOrder) {
@@ -167,7 +167,7 @@ export default function CartCheckoutPage() {
 
     // Handle size change for cart items
     const handleSizeChange = (itemId, newSize, item) => {
-        const new_Slug = `${item?.item_id}_${item?.SelectedColor?.toLowerCase()}_${newSize}`
+        const new_Slug = variantKey(item?.item_id, item?.SelectedColor, newSize)
         const preOrder = isPreOrderRequired(item, new_Slug)
         // console.log("preOrder type",{preOrder,new_Slug})
 
