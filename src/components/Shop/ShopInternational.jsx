@@ -9,7 +9,6 @@ import ProductCardInternational from "./ProductCardInternational"
 import { getColorClass } from "@/utils/getColorClass"
 import ProductListSkeleton from "../Skeletons/ProductListSkeleton"
 import { useParams } from "next/navigation"
-import { getItemById } from "@/utils/getItemById"
 
 const allColors = ["white", "black", "red", "green"]
 
@@ -56,17 +55,19 @@ export default function ShopInternational({ brands, categories }) {
     return () => clearTimeout(handler)
   }, [searchTerm])
 
-  // Sync initial filter state
+  // Filters live in a site-wide context. A brand, category or search picked
+  // on another page would otherwise stay applied here, and this page has no
+  // filter controls to clear it. Start every visit with no filters.
   useEffect(() => {
-    setSelectedColor(filterProductState?.color)
-    setSelectedBrand(filterProductState?.brand)
-    setSelectedCategory(filterProductState?.category)
-    setSelectedBrandName(getItemById(brands, filterProductState?.brand)?.name)
-    setSelectedCategoryName(getItemById(categories, filterProductState?.category)?.name)
+    dispatchFilterProduct({ type: "RESET_FILTERS" })
   }, [])
 
   // Fetch প্রথম page (filters change হলে reset)
   useEffect(() => {
+    // Ignore a response that arrives after the filters changed again, so an
+    // older request cannot overwrite the newer list.
+    let ignore = false
+
     const fetchProducts = async () => {
       try {
         setLoading(true)
@@ -83,17 +84,21 @@ export default function ShopInternational({ brands, categories }) {
           `/products?international=1&${query.toString()}&page=1&per_page=${per_page}`
         )
 
+        if (ignore) return
         setProducts(data?.data?.data || [])
         setTotalPages(data?.data?.last_page || 1)
         setCurrentPage(1)
       } catch (err) {
-        console.error("Fetch failed", err)
+        if (!ignore) console.error("Fetch failed", err)
       } finally {
-        setLoading(false)
+        if (!ignore) setLoading(false)
       }
     }
 
     fetchProducts()
+    return () => {
+      ignore = true
+    }
   }, [debouncedSearchTerm, filterProductState])
 
   // Preload Next Page

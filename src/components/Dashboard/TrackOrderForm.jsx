@@ -7,7 +7,10 @@ import axiosInstance from "@/utils/axiosInstance"
 export default function TrackOrderForm() {
   const [orderNumber, setOrderNumber] = useState("")
   const [phone, setPhone] = useState("")
- const [currentStep,setCurrentStep]=useState(0)
+  // Timeline from the API: regular orders and pre-orders have different steps.
+  const [track, setTrack] = useState(null)
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async(e) => {
     e.preventDefault()
@@ -16,16 +19,18 @@ export default function TrackOrderForm() {
       phone
     }
 
+    setLoading(true)
+    setError("")
+
     try {
-      const {data} = await axiosInstance.post("/order/traces", payloadData);
-
-    // console.log("trace order res",data)
-    setCurrentStep(data[0]?.status_id)
+      const {data} = await axiosInstance.post("/order/track", payloadData);
+      setTrack(data)
     } catch (error) {
-      
+      setTrack(null)
+      setError(error?.response?.data?.message ?? "Could not track this order. Please try again.")
+    } finally {
+      setLoading(false)
     }
-
-   
   }
 
   return (
@@ -73,14 +78,23 @@ export default function TrackOrderForm() {
           </div>
           <button
             type="submit"
-            className="mt-2 w-full py-2 bg-[#3A9E75] text-white rounded-sm font-semibold hover:bg-[#338b65]"
+            disabled={loading}
+            className="mt-2 w-full py-2 bg-[#3A9E75] text-white rounded-sm font-semibold hover:bg-[#338b65] disabled:opacity-60"
           >
-            TRACK
+            {loading ? "TRACKING..." : "TRACK"}
           </button>
+          {error && <p className="text-sm text-red-600">{error}</p>}
         </form>
         </div>
         <div className="w-full sm:w-2/4">
-  <TrackOrder currentStep={currentStep}/>
+          {track && (
+            <p className="px-6 mb-4 text-sm text-gray-700">
+              Order <b>{track.order_no}</b>
+              {track.is_pre_order && <span className="ml-2 px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-xs">Pre-Order</span>}
+              <span className="ml-2">Status: <b>{track.status?.name}</b></span>
+            </p>
+          )}
+          <TrackOrder steps={track?.steps}/>
         </div>
        </div>
        
