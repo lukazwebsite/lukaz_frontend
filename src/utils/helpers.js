@@ -28,6 +28,23 @@ export function getFallbackImageUrl(type, path) {
 }
 
 
+// Builds a variant's additional_key the same way the backend does with
+// Str::slug("{product_id}_{color}_{size}", '_'). Colours such as
+// "White & Green" become "white_green", so a plain lowercase/space swap
+// does not match. Keep this in step with Laravel's Str::slug.
+export function variantKey(productId, color, size) {
+  return `${productId ?? ""}_${color ?? ""}_${size ?? ""}`
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/-+/g, "_")
+    .replace(/@/g, "_at_")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}_\s]+/gu, "")
+    .replace(/[_\s]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+
 export function hasPreOrder(items) {
   return items.some(item => item.preOrder === true) ? true : false;
 }

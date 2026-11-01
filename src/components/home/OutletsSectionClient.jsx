@@ -2,14 +2,11 @@
 
 import BranchImg from "@/components/shared/BranchImg";
 import SectionHeading from "@/components/shared/SectionHeading";
+import Ticker, { TickerArrows, useTicker } from "@/components/shared/Ticker";
 import Link from "next/link";
 import React, { useRef, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, Clock, Phone, ArrowUpRight } from "lucide-react";
+import { Clock, Phone, ArrowUpRight } from "lucide-react";
 
 // Opening hours per city, keyed by lowercase outlet name.
 const FALLBACK_HOURS = {
@@ -139,7 +136,7 @@ function OutletCard({ outlet }) {
 
 // ──── Main Client Component ────
 export default function OutletsSectionClient({ outlets }) {
-  const list = outlets ?? [];
+  const ticker = useTicker(outlets);
 
   return (
     <section className="bg-white pt-4 md:pt-6 pb-2">
@@ -150,21 +147,7 @@ export default function OutletsSectionClient({ outlets }) {
           subtitle="Discover our collections in person at our showrooms.."
           action={
             <div className="flex items-center gap-4">
-              {/* Swiper hides these (swiper-button-lock) when every card already fits. */}
-              <div className="hidden lg:flex gap-2">
-                <button
-                  aria-label="Previous outlets"
-                  className="outlet-prev w-10 h-10 rounded-full border border-gray-300 bg-white text-gray-600 hover:text-[#237A52] hover:border-[#237A52] cursor-pointer flex items-center justify-center transition-colors"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-                <button
-                  aria-label="Next outlets"
-                  className="outlet-next w-10 h-10 rounded-full border border-gray-300 bg-white text-gray-600 hover:text-[#237A52] hover:border-[#237A52] cursor-pointer flex items-center justify-center transition-colors"
-                >
-                  <ChevronRight size={20} />
-                </button>
-              </div>
+              <TickerArrows ticker={ticker} label="outlets" className="hidden lg:flex" />
               <Link
                 href="/outlets"
                 className="font-label inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#09090C] hover:text-[#237A52] transition-colors"
@@ -176,32 +159,17 @@ export default function OutletsSectionClient({ outlets }) {
           }
         />
 
-        {/* Drag with mouse or swipe on touch. Locked (no movement) when all cards fit. */}
-        <Swiper
-          modules={[Navigation, Autoplay]}
-          slidesPerView={1.15}
-          spaceBetween={16}
-          rewind
-          autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-          navigation={{ nextEl: ".outlet-next", prevEl: ".outlet-prev" }}
-          breakpoints={{
-            640: { slidesPerView: 2, spaceBetween: 24 },
-            1024: { slidesPerView: 3, spaceBetween: 24 },
-          }}
-          onInit={(swiper) => {
-            swiper.params.navigation.prevEl = ".outlet-prev";
-            swiper.params.navigation.nextEl = ".outlet-next";
-            swiper.navigation.init();
-            swiper.navigation.update();
-          }}
-          className="!pt-2 !pb-4 cursor-grab active:cursor-grabbing"
-        >
-          {list.map((outlet, index) => (
-            <SwiperSlide key={outlet?.id ?? index} className="!h-auto">
-              <OutletCard outlet={outlet} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {/* Endless auto-scrolling band. Hover pauses; drag or swipe moves it by hand.
+            Cards per view: 1.15 (16px gap), 2 from 640px and 3 from 1024px (24px gap).
+            Vertical padding leaves room for the card's hover lift and shadow. */}
+        <Ticker
+          ticker={ticker}
+          className="pt-2 pb-4"
+          gapClassName="gap-4 sm:gap-6"
+          itemClassName="w-[calc((100cqw-2.4px)/1.15)] sm:w-[calc((100cqw-24px)/2)] lg:w-[calc((100cqw-48px)/3)]"
+          renderItem={(outlet) => <OutletCard outlet={outlet} />}
+        />
+
       </div>
     </section>
   );

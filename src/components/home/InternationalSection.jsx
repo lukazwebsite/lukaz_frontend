@@ -1,9 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
-import "swiper/css";
 import Link from "next/link";
 import {
   Globe,
@@ -12,7 +9,8 @@ import {
   Receipt,
   ShieldCheck,
 } from "lucide-react";
-import HomeProductCard from "../Cards/HomeProductCard";
+import HomeProductCard, { HOME_PRODUCT_CARD_WIDTH } from "../Cards/HomeProductCard";
+import Ticker, { useTicker } from "../shared/Ticker";
 
 const ACCENT = "#3DDC84";
 const MAX_CARDS = 20;
@@ -20,9 +18,10 @@ const MAX_CARDS = 20;
 // Dark "international vault" block on the home page. `products` comes from
 // /products?international=1 (see getInternationalProducts in utils/actions).
 export default function InternationalSection({ products = [] }) {
-  if (!products.length) return null;
-
   const visible = products.slice(0, MAX_CARDS);
+  const ticker = useTicker(visible);
+
+  if (!products.length) return null;
 
   return (
     <section className="w-full border-b border-white/10 bg-[#0b0b0f] py-8 md:py-14">
@@ -136,42 +135,19 @@ export default function InternationalSection({ products = [] }) {
           </div>
         </div>
 
-        {/* Latest cards: same slider as "New and Best Sales" */}
+        {/* Latest cards: same endless ticker as "New and Best Sales" */}
         <div className="mt-10">
-          <Swiper
-            slidesPerView={1.2}
-            spaceBetween={16}
-            speed={900}
-            style={{ "--swiper-wrapper-transition-timing-function": "cubic-bezier(0.25, 0.8, 0.25, 1)" }}
-            simulateTouch
-            grabCursor
-            threshold={5}
-            followFinger
-            resistanceRatio={0.6}
-            loop={visible.length > 9}
-            autoplay={{
-              delay: 2500,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: true,
-            }}
-            breakpoints={{
-              640: { slidesPerView: 2.2 },
-              768: { slidesPerView: 2.8 },
-              1024: { slidesPerView: 3.2 },
-              1424: { slidesPerView: 4.2 },
-              1624: { slidesPerView: 4.4 },
-            }}
-            modules={[Autoplay]}
-          >
-            {visible.map((item) => (
-              <SwiperSlide key={item?.slug || item?.id}>
-                <HomeProductCard
-                  item={item}
-                  href={`/international-product/${item?.slug}`}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          <Ticker
+            ticker={ticker}
+            getKey={(item) => item?.slug || item?.id}
+            itemClassName={HOME_PRODUCT_CARD_WIDTH}
+            renderItem={(item) => (
+              <HomeProductCard
+                item={item}
+                href={`/international-product/${item?.slug}`}
+              />
+            )}
+          />
         </div>
 
         <div className="mt-8 text-center">

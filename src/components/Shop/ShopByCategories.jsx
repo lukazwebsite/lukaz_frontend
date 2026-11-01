@@ -8,6 +8,15 @@ import { cn } from "@/utils/cn";
 import ProductCardByCategories from "./ProductCardByCategories";
 import CategoryShopHeader from "./CategoryShopHeader";
 
+// Extra listing rules per category slug, sent to the API as query params.
+// Outfits shows in-stock items only, priced highest first.
+const CATEGORY_LISTING_PARAMS = {
+  outfits: "&in_stock=1&sort_by_price=high_to_low",
+};
+
+const categoryProductsUrl = (slug, page, perPage) =>
+  `/categories/${slug}/with/products?page=${page}&per_page=${perPage}${CATEGORY_LISTING_PARAMS[slug] || ""}`;
+
 export default function ShopByCategories({ slug }) {
   const [products, setProducts] = useState([]);
   const [catInfo, setCatInfo] = useState({});
@@ -60,7 +69,7 @@ export default function ShopByCategories({ slug }) {
         setLoading(true);
         setPreloadedProducts(null);
         const { data } = await axiosInstance.get(
-          `/categories/${slug}/with/products?page=1&per_page=${per_page}`
+          categoryProductsUrl(slug, 1, per_page)
         );
 
         setProducts(data?.products?.data || []);
@@ -84,7 +93,7 @@ export default function ShopByCategories({ slug }) {
         try {
           const nextPage = currentPage + 1;
           const { data } = await axiosInstance.get(
-            `/categories/${slug}/with/products?page=${nextPage}&per_page=${per_page}`
+            categoryProductsUrl(slug, nextPage, per_page)
           );
           setPreloadedProducts(data?.products?.data || []);
         } catch (error) {
@@ -120,7 +129,7 @@ export default function ShopByCategories({ slug }) {
       const nextPage = currentPage + 1;
 
       const { data } = await axiosInstance.get(
-        `/categories/${slug}/with/products?page=${nextPage}&per_page=${per_page}`
+        categoryProductsUrl(slug, nextPage, per_page)
       );
 
       setProducts((prev) => [...prev, ...(data?.products?.data || [])]);
