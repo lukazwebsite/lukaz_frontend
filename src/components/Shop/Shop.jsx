@@ -78,6 +78,7 @@ export default function ShopPage({ brands, categories }) {
         query.append("brand_id", filterProductState?.brand || "")
         query.append("color", filterProductState?.color || "")
         query.append("sort_by_price", filterProductState?.sort || "")
+        query.append("in_stock", "1")
 
         const { data } = await axiosInstance.get(
           `/products?${query.toString()}&page=1&per_page=${per_page}`
@@ -110,6 +111,7 @@ export default function ShopPage({ brands, categories }) {
           query.append("brand_id", filterProductState?.brand || "")
           query.append("color", filterProductState?.color || "")
           query.append("sort_by_price", filterProductState?.sort || "")
+          query.append("in_stock", "1")
 
           const { data } = await axiosInstance.get(
             `/products?${query.toString()}&page=${nextPage}&per_page=${per_page}`
@@ -150,6 +152,7 @@ export default function ShopPage({ brands, categories }) {
       query.append("brand_id", filterProductState?.brand || "")
       query.append("color", filterProductState?.color || "")
       query.append("sort_by_price", filterProductState?.sort || "")
+      query.append("in_stock", "1")
 
       const { data } = await axiosInstance.get(
         `/products?${query.toString()}&page=${nextPage}&per_page=${per_page}`

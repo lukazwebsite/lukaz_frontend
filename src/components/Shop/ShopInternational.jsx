@@ -79,6 +79,7 @@ export default function ShopInternational({ brands, categories }) {
         query.append("brand_id", filterProductState?.brand || "")
         query.append("color", filterProductState?.color || "")
         query.append("sort_by_price", filterProductState?.sort || "")
+        query.append("in_stock", "1")
 
         const { data } = await axiosInstance.get(
           `/products?international=1&${query.toString()}&page=1&per_page=${per_page}`
@@ -114,6 +115,7 @@ export default function ShopInternational({ brands, categories }) {
           query.append("brand_id", filterProductState?.brand || "")
           query.append("color", filterProductState?.color || "")
           query.append("sort_by_price", filterProductState?.sort || "")
+          query.append("in_stock", "1")
 
           const { data } = await axiosInstance.get(
             `/products?international=1&${query.toString()}&page=${nextPage}&per_page=${per_page}`
@@ -154,6 +156,7 @@ export default function ShopInternational({ brands, categories }) {
       query.append("brand_id", filterProductState?.brand || "")
       query.append("color", filterProductState?.color || "")
       query.append("sort_by_price", filterProductState?.sort || "")
+      query.append("in_stock", "1")
 
       const { data } = await axiosInstance.get(
         `/products?international=1&${query.toString()}&page=${nextPage}&per_page=${per_page}`

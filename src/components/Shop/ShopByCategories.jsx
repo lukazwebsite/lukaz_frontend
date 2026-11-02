@@ -8,14 +8,12 @@ import { cn } from "@/utils/cn";
 import ProductCardByCategories from "./ProductCardByCategories";
 import CategoryShopHeader from "./CategoryShopHeader";
 
-// Extra listing rules per category slug, sent to the API as query params.
-// Outfits shows in-stock items only, priced highest first.
-const CATEGORY_LISTING_PARAMS = {
-  outfits: "&in_stock=1&sort_by_price=high_to_low",
-};
+// Listing rules for every category, sent to the API as query params:
+// in-stock items only, priced highest first (ties: more stock, then newest).
+const CATEGORY_LISTING_PARAMS = "&in_stock=1&sort_by_price=high_to_low";
 
 const categoryProductsUrl = (slug, page, perPage) =>
-  `/categories/${slug}/with/products?page=${page}&per_page=${perPage}${CATEGORY_LISTING_PARAMS[slug] || ""}`;
+  `/categories/${slug}/with/products?page=${page}&per_page=${perPage}${CATEGORY_LISTING_PARAMS}`;
 
 export default function ShopByCategories({ slug }) {
   const [products, setProducts] = useState([]);
