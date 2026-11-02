@@ -9,7 +9,8 @@ const initialState = {
   brand: "",
   category:"",
   priceRange: "",
-  sort: "low_to_high",
+  // Storefront listings: highest price first, in-stock items only.
+  sort: "high_to_low",
   search: "",
   color:""
 };
