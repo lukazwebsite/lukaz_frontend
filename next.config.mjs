@@ -64,6 +64,17 @@ const nextConfig = {
     imageSizes: [96, 256, 384],
   },
 
+  // On Windows, Next hands Turbopack images.loaderFile as "./src\utils\..."
+  // (backslashes), which Turbopack cannot resolve, so `next dev --turbopack`
+  // silently keeps the default loader and every <Image> throws "missing
+  // loader prop". Point the alias at the loader with a forward-slash path.
+  // Webpack (`next build`) ignores this key.
+  turbopack: {
+    resolveAlias: {
+      "next/dist/shared/lib/image-loader": "./src/utils/imageLoader.js",
+    },
+  },
+
   // Proxy /api/* to the backend defined by BASE_URL.
   async rewrites() {
     return [
