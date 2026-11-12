@@ -9,8 +9,9 @@ import ProductCardByCategories from "./ProductCardByCategories";
 import CategoryShopHeader from "./CategoryShopHeader";
 
 // Listing rules for every category, sent to the API as query params:
-// in-stock items only, priced highest first (ties: more stock, then newest).
-const CATEGORY_LISTING_PARAMS = "&in_stock=1&sort_by_price=high_to_low";
+// in-stock items first, then out-of-stock items; each group priced highest
+// first (ties: more stock, then newest).
+const CATEGORY_LISTING_PARAMS = "&out_of_stock_last=1&sort_by_price=high_to_low";
 
 const categoryProductsUrl = (slug, page, perPage) =>
   `/categories/${slug}/with/products?page=${page}&per_page=${perPage}${CATEGORY_LISTING_PARAMS}`;

@@ -12,7 +12,7 @@ import TopHeader from "./TopHeader"
 import Link from "next/link"
 import SeachBarwithDropDown from "./SeachBarwithDropDown"
 import MegaMenuPanel from "./MegaMenuPanel"
-import { menuItems } from "./SecondMenu"
+import SecondMenu, { menuItems } from "./SecondMenu"
 
 const SneakerIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -220,6 +220,10 @@ export default function Header({ mainMenus, categories, topBar, logoUrl }) {
           />
         </div>
       </header>
+
+      {/* Mobile category bar (Sneakers / Outfits / Luxury); hidden from md up,
+          where the same links sit inside the header */}
+      <SecondMenu />
 
       {/* Mobile Search: opens from the header search icon */}
       {isSearchOpen && (
