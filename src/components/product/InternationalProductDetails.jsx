@@ -408,6 +408,11 @@ export default function InternationalProductDetails({ product }) {
                 </button>
               ))}
             </div>
+
+            {/* Pre-order hint */}
+            <p className="text-xs text-gray-500 mt-2 italic">
+              Other sizes? Pre-order via WhatsApp or Messenger!
+            </p>
           </div>
 
           {/* Quantity */}
